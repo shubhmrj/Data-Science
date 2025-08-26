@@ -29,6 +29,11 @@ Comprehensive README for the `Linear Regression Projects` folder in the Data-Sci
 14. [License](#license)
 15. [Contact](#contact)
 
+![Demo](Media\alpha0.003-min.gif)
+![Demo](Media\alpha0.03-min.gif)
+![Demo](Media\alpha0.3-min.gif)
+![Demo](Media\alpha0.2-min.gif)
+
 ---
 
 ## Project Overview
@@ -38,6 +43,15 @@ This README explains how to get the environment running, reproduce results, and 
 
 ---
 
+## Models Implemented
+- Simple Linear Regression
+- Multiple Linear Regression
+- Polynomial Regression
+- Ridge, Lasso, ElasticNet
+- Pipelines for preprocessing + modeling
+
+
+---
 ## Repository Structure
 ```
 Linear Regression Projects/
@@ -88,14 +102,6 @@ Datasets are either included in the `datasets/` folder or sourced externally (Ka
 - Correlation heatmaps
 - Outlier detection and handling
 
----
-
-## Models Implemented
-- Simple Linear Regression
-- Multiple Linear Regression
-- Polynomial Regression
-- Ridge, Lasso, ElasticNet
-- Pipelines for preprocessing + modeling
 
 ---
 
