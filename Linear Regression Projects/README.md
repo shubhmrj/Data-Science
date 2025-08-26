@@ -47,10 +47,10 @@ This README explains how to get the environment running, reproduce results, and 
 - Pipelines for preprocessing + modeling
 
 
-![Demo](Media\alpha0.003-min.gif)
-![Demo](Media\alpha0.03-min.gif)
-![Demo](Media\alpha0.3-min.gif)
-![Demo](Media\alpha0.2-min.gif)
+![Demo](./Media/alpha0.003-min.gif)
+![Demo](./Media/alpha0.03-min.gif)
+![Demo](./Media/alpha0.3-min.gif)
+![Demo](./Media/alpha0.2-min.gif)
 
 ---
 ## Repository Structure
