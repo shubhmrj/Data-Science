@@ -14,12 +14,12 @@ Comprehensive README for the `Linear Regression Projects` folder in the Data-Sci
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
-2. [Repository Structure](#repository-structure)
-3. [Environment & Setup](#environment--setup)
-4. [How to run the notebooks](#how-to-run-the-notebooks)
-5. [Dataset(s)](#datasets)
-6. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
-7. [Models Implemented](#models-implemented)
+2. [Models Implemented](#models-implemented)
+3. [Repository Structure](#repository-structure)
+4. [Environment & Setup](#environment--setup)
+5. [How to run the notebooks](#how-to-run-the-notebooks)
+6. [Dataset(s)](#datasets)
+7. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
 8. [Evaluation Metrics](#evaluation-metrics)
 9. [Results Summary](#results-summary)
 10. [Visualizations & Plots](#visualizations--plots)
@@ -29,10 +29,6 @@ Comprehensive README for the `Linear Regression Projects` folder in the Data-Sci
 14. [License](#license)
 15. [Contact](#contact)
 
-![Demo](Media\alpha0.003-min.gif)
-![Demo](Media\alpha0.03-min.gif)
-![Demo](Media\alpha0.3-min.gif)
-![Demo](Media\alpha0.2-min.gif)
 
 ---
 
@@ -50,6 +46,11 @@ This README explains how to get the environment running, reproduce results, and 
 - Ridge, Lasso, ElasticNet
 - Pipelines for preprocessing + modeling
 
+
+![Demo](Media\alpha0.003-min.gif)
+![Demo](Media\alpha0.03-min.gif)
+![Demo](Media\alpha0.3-min.gif)
+![Demo](Media\alpha0.2-min.gif)
 
 ---
 ## Repository Structure
