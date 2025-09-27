@@ -125,7 +125,10 @@ Test R²: 0.78
 ## Visualizations & Plots
 Include scatter plots, residual plots, and learning curves. Save them under `reports/`.
 
-![Sample Plot](https://raw.githubusercontent.com/shubhmrj/Data-Science/main/Linear%20Regression%20Projects/reports/sample_plot.png)
+![Demo](./Media/alpha0.003-min.gif)
+![Demo](./Media/alpha0.03-min.gif)
+![Demo](./Media/alpha0.3-min.gif)
+![Demo](./Media/alpha0.2-min.gif)
 
 ---
 
