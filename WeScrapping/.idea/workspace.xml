@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc3f2fcc-9e81-401c-8010-a5b43a6d8f06" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/secondcode.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sih_scraper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Linear Regression Projects/Multiple Linear Regression/practical.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../Linear Regression Projects/Multiple Linear Regression/practical.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Linear Regression Projects/Simple Linear Regression/Practical.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../Linear Regression Projects/Simple Linear Regression/Practical.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,21 +22,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "shubhmrj"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;shubhmrj&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/shubhmrj/Data-Science.git",
-    "accountId": "4031434e-9a58-4e06-a2c2-0ac3742a72c5"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/shubhmrj/Data-Science.git&quot;,
+    &quot;accountId&quot;: &quot;4031434e-9a58-4e06-a2c2-0ac3742a72c5&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="33QJiR3pARomuhKTgEYRteuWeqe" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -56,6 +53,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "multiple-regression",
+    "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "E:/Data Science/WeScrapping"
   }
 }]]></component>
