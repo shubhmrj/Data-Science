@@ -1,0 +1,438 @@
+/* static/css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary: #2563eb;       /* Modern Blue */
+    --primary-dark: #1e3a8a;  /* Deep Navy */
+    --accent: #f43f5e;        /* Medical Red */
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --text-main: #1e293b;
+    --text-light: #64748b;
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    
+    /* Result Colors */
+    --safe-bg: #ecfdf5;
+    --safe-text: #047857;
+    --danger-bg: #fff1f2;
+    --danger-text: #be123c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* --- LANDING PAGE --- */
+.landing-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: radial-gradient(circle at center, #ffffff 0%, #e2e8f0 100%);
+    position: relative;
+    padding: 2rem;
+}
+
+.pulse-graph {
+    width: 600px;
+    height: 150px;
+    margin-bottom: 2rem;
+}
+
+.ecg-line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 3s linear infinite;
+    filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.5));
+}
+
+@keyframes dash {
+    to { stroke-dashoffset: 0; }
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--primary-dark), var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 1rem;
+    letter-spacing: -0.05em;
+}
+
+.hero-desc {
+    max-width: 700px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-light);
+    margin-bottom: 3rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.btn-start {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-start:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(37, 99, 235, 0.4);
+}
+
+/* --- APP LAYOUT (Split Screen) --- */
+.app-wrapper {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr; /* Form vs Sidebar */
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: white;
+    box-shadow: 0 0 50px rgba(0,0,0,0.05);
+}
+
+/* Left: Form */
+.form-section {
+    padding: 4rem;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+input, select {
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1rem;
+    background: #f8fafc;
+    transition: all 0.2s;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.btn-submit {
+    grid-column: span 2;
+    margin-top: 1.5rem;
+    background: var(--primary-dark);
+    color: white;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.btn-submit:hover { background: var(--primary); }
+
+/* Helper for Gender */
+.gender-warning {
+    display: none;
+    font-size: 0.8rem;
+    background: #fffbeb;
+    color: #b45309;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 5px;
+    border-left: 3px solid #f59e0b;
+}
+
+/* Right: Knowledge Hub (Sticky) */
+.hub-section {
+    background: #f8fafc;
+    border-left: 1px solid #e2e8f0;
+    padding: 4rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+}
+
+.hub-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+}
+.hub-card.active { opacity: 1; transform: translateY(0); }
+
+.hub-label {
+    color: var(--primary);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.hub-title {
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hub-desc {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+/* Sidebar Lists */
+.hub-list {
+    background: #f1f5f9;
+    padding: 1rem;
+    border-radius: 8px;
+    list-style: none;
+}
+.hub-list li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 10px;
+}
+.val-badge {
+    font-weight: 700;
+    color: var(--primary-dark);
+    min-width: 20px;
+}
+
+/* Sidebar Inline Grids (Good/Bad) */
+.hub-range { color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem; }
+.example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; }
+.ex-col strong { display: block; margin-bottom: 5px; font-size: 0.8rem; text-transform: uppercase; color: #64748b; }
+.ex-col ul { list-style: none; padding: 0; }
+.ex-col.good { background: #f0fdf4; padding: 10px; border-radius: 8px; border: 1px solid #bbf7d0; color: #166534; }
+.ex-col.bad { background: #fef2f2; padding: 10px; border-radius: 8px; border: 1px solid #fecaca; color: #991b1b; }
+
+
+/* MODALS */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: white;
+    padding: 0;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: popIn 0.3s ease;
+}
+
+.modal-header { padding: 1.5rem; color: white; display: flex; justify-content: space-between; align-items: center; }
+.modal-header.danger { background: var(--danger-text); }
+.modal-header.safe { background: var(--safe-text); }
+
+.modal-body { padding: 2rem; }
+
+.suggestion-list { margin-top: 1rem; padding-left: 1.2rem; color: var(--text-light); }
+.suggestion-list li { margin-bottom: 0.5rem; }
+
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-top: 1rem;
+    border: none;
+    cursor: pointer;
+}
+.btn-danger { background: var(--danger-text); color: white; }
+.btn-safe { background: var(--safe-bg); color: var(--safe-text); border: 1px solid var(--safe-text); }
+.btn-secondary { background: #e2e8f0; color: var(--text-main); margin-top: 0.5rem; }
+
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+
+/* --- MOBILE RESPONSIVENESS (Smart Bottom Sheet) --- */
+@media (max-width: 900px) {
+    /* 1. Stack the layout */
+    .app-wrapper { 
+        grid-template-columns: 1fr; 
+        height: auto;
+        overflow: visible;
+        display: block;
+    }
+
+    /* 2. Form Padding - Crucial for Scrolling */
+    .form-section { 
+        padding: 2rem 1.5rem;
+        /* Massive padding so you can scroll the last input ABOVE the bottom sheet */
+        padding-bottom: 40vh; 
+        min-height: 100vh;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; 
+        gap: 1.5rem;
+    }
+
+    /* 3. Knowledge Hub as Interactive Bottom Sheet */
+    .hub-section {
+        position: fixed; 
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        /* Start Small: Only show Title + 1 line */
+        max-height: 15vh; 
+        background: rgba(255, 255, 255, 0.98);
+        border-top: 1px solid #cbd5e1;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+        z-index: 1000;
+        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        padding: 0;
+    }
+
+    /* When class 'expanded' is added via JS, it grows */
+    .hub-section.expanded {
+        max-height: 60vh; /* Take up 60% screen when expanded */
+        overflow-y: auto;
+    }
+
+    /* Mobile Hub Card Styling */
+    .hub-card {
+        padding: 1rem 1.5rem;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .hub-label { font-size: 0.75rem; color: var(--primary); margin-bottom: 0.25rem; }
+    .hub-title { font-size: 1.1rem; margin-bottom: 0.25rem; display: inline-block; }
+    
+    /* Hide detailed description/lists by default on mobile to save space */
+    .hub-desc, .hub-section-inner {
+        display: none; 
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    /* Show details when expanded */
+    .hub-section.expanded .hub-desc, 
+    .hub-section.expanded .hub-section-inner {
+        display: block;
+        opacity: 1;
+        margin-top: 1rem;
+    }
+
+    /* 4. Toggle Handle for Mobile */
+    .mobile-toggle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f1f5f9;
+        padding: 0.5rem;
+        color: var(--text-light);
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .mobile-toggle::before {
+        content: "Tap to Expand Guide ▲";
+    }
+    .hub-section.expanded .mobile-toggle::before {
+        content: "Tap to Minimize ▼";
+    }
+
+    /* 5. Validation Styles */
+    input:invalid {
+        border-color: #ef4444;
+        background-color: #fef2f2;
+    }
+    .error-msg {
+        color: #dc2626;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        display: none;
+    }
+    input:invalid + .error-msg {
+        display: block;
+    }
+}
+
+/* Desktop Hide Toggle */
+@media (min-width: 901px) {
+    .mobile-toggle { display: none; }
+}

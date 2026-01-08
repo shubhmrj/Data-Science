@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart_Attack_Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="landing-container">
+        
+        <svg class="pulse-graph" viewBox="0 0 600 150">
+            <path class="ecg-line" d="M0,75 L50,75 L60,40 L70,110 L80,20 L90,75 L150,75 L160,75 L170,50 L180,100 L190,75 L250,75 L260,30 L270,120 L280,10 L290,75 L600,75" />
+        </svg>
+
+        <h1 class="hero-title">Heart_Attack_Prediction</h1>
+        
+        <div class="hero-desc">
+            <p>
+                <strong>CARDIOVASCULAR RISK ASSESSMENT</strong><br><br>
+                An open-source diagnostic tool leveraging <strong>Logistic Regression</strong> on the <strong>Cleveland Heart Disease Dataset</strong>. 
+                We provide instant, clinically-relevant risk analysis to support early intervention strategies.
+            </p>
+        </div>
+
+        <a href="/predictdata" class="btn-start">Start Assessment</a>
+    </div>
+
+</body>
+</html>

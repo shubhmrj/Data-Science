@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Unit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<input type="hidden" id="risk_data" value="{{ results if results is defined else 'none' }}">
+
+<div class="app-wrapper">
+    
+    <div class="form-section">
+        <h2 class="section-title">Clinical Data Entry</h2>
+        <p class="section-subtitle">Select a field to view its clinical definitions, normal ranges, and risk benchmarks.</p>
+
+        <form action="{{ url_for('predict_datapoint')}}" method="post" autocomplete="off">
+            <div class="form-grid">
+                
+                <div class="input-group">
+                    <label>Age (Years)</label>
+                    <input type="number" name="Age" min="1" max="110" required placeholder="e.g., 55" onfocus="showInfo('age')">
+                </div>
+
+                <div class="input-group">
+                    <label>Sex</label>
+                    <select name="sex" required onfocus="showInfo('sex')" onchange="checkGender(this)">
+                        <option value="" disabled selected>Select...</option>
+                        <option value="1">Male</option>
+                        <option value="0">Female</option>
+                        <option value="other">Other / Non-Binary</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Chest Pain Type</label>
+                    <select name="cp" required onfocus="showInfo('cp')">
+                        <option value="" disabled selected>Select Symptom...</option>
+                        <option value="0">Type 0 (Typical Angina)</option>
+                        <option value="1">Type 1 (Atypical Angina)</option>
+                        <option value="2">Type 2 (Non-Anginal)</option>
+                        <option value="3">Type 3 (Asymptomatic)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Resting BP (mm Hg)</label>
+                    <input type="number" name="trestbps" min="50" required placeholder="e.g. 120" onfocus="showInfo('bp')">
+                </div>
+
+                <div class="input-group">
+                    <label>Cholesterol (mg/dl)</label>
+                    <input type="number" name="chol" min="100" required placeholder="e.g. 200" onfocus="showInfo('chol')">
+                </div>
+
+                <div class="input-group">
+                    <label>Fasting Blood Sugar</label>
+                    <select name="fbs" required onfocus="showInfo('fbs')">
+                        <option value="0">Normal (< 120)</option>
+                        <option value="1">High (> 120)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Resting ECG</label>
+                    <select name="restecg" required onfocus="showInfo('ecg')">
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T Abnormality</option>
+                        <option value="2">Hypertrophy</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Max Heart Rate</label>
+                    <input type="number" name="thalach" required placeholder="BPM" onfocus="showInfo('thalach')">
+                </div>
+
+                <div class="input-group">
+                    <label>Exercise Induced Angina</label>
+                    <select name="exang" required onfocus="showInfo('exang')">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>ST Depression</label>
+                    <input type="number" name="oldpeak" step="0.1" required placeholder="e.g. 1.0" onfocus="showInfo('oldpeak')">
+                </div>
+
+                <div class="input-group">
+                    <label>ST Slope</label>
+                    <select name="slope" required onfocus="showInfo('slope')">
+                        <option value="0">Upsloping</option>
+                        <option value="1">Flat</option>
+                        <option value="2">Downsloping</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Major Vessels (0-3)</label>
+                    <select name="ca" required onfocus="showInfo('ca')">
+                        <option value="0">0 Vessels</option>
+                        <option value="1">1 Vessel</option>
+                        <option value="2">2 Vessels</option>
+                        <option value="3">3 Vessels</option>
+                    </select>
+                </div>
+
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Thalassemia</label>
+                    <select name="thal" required onfocus="showInfo('thal')">
+                        <option value="0">Normal</option>
+                        <option value="1">Fixed Defect</option>
+                        <option value="2">Reversible Defect</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Analyze Clinical Data</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="hub-section">
+        <div id="hub-card" class="hub-card active">
+            <span class="hub-label">Assistant</span>
+            <h3 class="hub-title">Ready for Input</h3>
+            <p class="hub-desc">Click any field on the left. I will provide definitions, typical ranges, and good/bad examples to help you enter accurate data.</p>
+        </div>
+    </div>
+
+</div>
+
+<div id="dangerModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header danger">
+            <h3>High Risk Detected</h3>
+        </div>
+        <div class="modal-body">
+            <p>The model indicates a <strong>high probability</strong> of heart disease based on the provided clinical markers.</p>
+            
+            <div id="danger-location-view">
+                <p style="margin-top:10px; font-size:0.9rem;"><strong>Recommended Action:</strong> Immediate Cardiologist Consultation.</p>
+                <button class="action-btn btn-danger" onclick="findHospitals()">Locate Nearest Hospital</button>
+                <button class="action-btn btn-secondary" onclick="showToDoList()">I cannot go right now / Cancel</button>
+            </div>
+
+            <div id="danger-todo-view" style="display:none;">
+                <strong>Immediate Safety Guidelines:</strong>
+                <ul class="suggestion-list">
+                    <li>Cease all physical exertion immediately.</li>
+                    <li>Sit in a semi-reclined position to ease breathing.</li>
+                    <li>Loosen any tight clothing around the neck/chest.</li>
+                    <li>If chest pain persists > 5 mins, call Emergency Services.</li>
+                </ul>
+                <button class="action-btn btn-secondary" onclick="closeModal('dangerModal')">Return to Form</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="safeModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header safe">
+            <h3>Low Risk Profile</h3>
+        </div>
+        <div class="modal-body">
+            <p>Great news. The clinical indicators suggest a <strong>healthy heart profile</strong>.</p>
+            <strong>Maintenance Recommendations:</strong>
+            <ul class="suggestion-list">
+                <li><strong>Activity:</strong> 30 mins moderate cardio (brisk walk), 5x/week.</li>
+                <li><strong>Diet:</strong> Limit sodium (under 2300mg) and saturated fats.</li>
+                <li><strong>Screening:</strong> Check BP and Cholesterol annually.</li>
+            </ul>
+            <button class="action-btn btn-safe" onclick="closeModal('safeModal')">Return to Assessment</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. RICH KNOWLEDGE DATA
+    const infoData = {
+        age: {
+            title: "Age",
+            desc: "The dataset is trained on ages 29 to 77. Predictions for patients under 29 are possible but statistically less reliable (80/20 rule).",
+            range: "Dataset Range: 29 - 77 years",
+            good: ["Under 45 (Lower Risk)", "50 (Average)"],
+            bad: ["Over 65 (Higher Risk)"],
+            type: "numeric"
+        },
+        sex: {
+            title: "Biological Sex",
+            desc: "This model uses the 1988 dataset which strictly classifies as Male/Female. For non-binary patients, please select the biological sex assigned at birth to ensure the math works correctly.",
+            range: "Binary Input Required",
+            options: [
+                "1: Male (Biologically)",
+                "0: Female (Biologically)",
+                "Other: (See note above)"
+            ],
+            type: "category"
+        },
+        cp: {
+            title: "Chest Pain Type",
+            desc: "Which description fits best?",
+            range: "Select the closest match",
+            options: [
+                "Type 0 (Typical): Pain triggered by exercise, relieved by rest.",
+                "Type 1 (Atypical): Breathlessness/Fatigue (common in women).",
+                "Type 2 (Non-Anginal): Sharp stabbing (usually not heart).",
+                "Type 3 (Asymptomatic): Silent ischemia (Most Dangerous)."
+            ],
+            type: "category"
+        },
+        bp: {
+            title: "Resting BP",
+            desc: "Blood pressure level upon hospital admission.",
+            range: "Normal Range: 90 - 120 mm Hg",
+            good: ["115 (Optimal)", "120 (Normal)"],
+            bad: ["140 (Hypertension)", "160+ (Critical)"],
+            type: "numeric"
+        },
+        chol: {
+            title: "Cholesterol",
+            desc: "Total serum cholesterol level.",
+            range: "Ideal: Below 200 mg/dL",
+            good: ["180 (Healthy)", "195 (Acceptable)"],
+            bad: ["240 (High)", "300+ (Very High)"],
+            type: "numeric"
+        },
+        fbs: {
+            title: "Fasting Blood Sugar",
+            desc: "Is blood sugar > 120 mg/dl after fasting?",
+            range: "Binary Indicator for Diabetes Risk",
+            options: [
+                "0: No (Sugar is normal/low)",
+                "1: Yes (Sugar is high / Diabetic risk)"
+            ],
+            type: "category"
+        },
+        ecg: {
+            title: "Resting ECG",
+            desc: "Electrical activity of the heart at rest.",
+            range: "Select Result",
+            options: [
+                "0: Normal",
+                "1: ST Abnormality (Sign of Ischemia)",
+                "2: Hypertrophy (Thickened Heart Muscle)"
+            ],
+            type: "category"
+        },
+        thalach: {
+            title: "Max Heart Rate",
+            desc: "Highest rate achieved during stress exercise.",
+            range: "Target: Approx 220 minus Age",
+            good: ["160+ (Young/Fit)", "140 (Average)"],
+            bad: ["Under 100 (Inability to raise rate is risky)"],
+            type: "numeric"
+        },
+        exang: {
+            title: "Exercise Angina",
+            desc: "Example: Patient tries to run but gets chest pain and must stop walking immediately.",
+            range: "Binary Symptom",
+            options: [
+                "1: Yes (Pain stops you from moving)",
+                "0: No (No pain or random pain)"
+            ],
+            type: "category"
+        },
+        oldpeak: {
+            title: "ST Depression",
+            desc: "A dip in the ECG wave during exercise vs rest.",
+            range: "Normal: 0",
+            good: ["0.0 (Normal)", "0.5 (Minor)"],
+            bad: ["2.0 (Ischemia)", "4.0 (Severe Blockage)"],
+            type: "numeric"
+        },
+        slope: {
+            title: "ST Slope",
+            desc: "The angle of the ECG wave peak.",
+            range: "Diagnostic Feature",
+            options: [
+                "0: Upsloping (Healthy response)",
+                "1: Flat (Concerning)",
+                "2: Downsloping (High Risk Sign)"
+            ],
+            type: "category"
+        },
+        ca: {
+            title: "Major Vessels",
+            desc: "Number of vessels visible via Fluoroscopy dye. If a vessel lights up (colored), it is open. If it stays dark, it is blocked.",
+            range: "Traffic Light Logic (0 is Worst)",
+            options: [
+                "3: All vessels open (Best/Healthy)",
+                "2: Two vessels open",
+                "1: One vessel open",
+                "0: No vessels visible (Blocked/Risky)",
+                "Note: 0 is worst, 3 is best."
+            ],
+            type: "category"
+        },
+        thal: {
+            title: "Thalassemia",
+            desc: "Blood flow defect status.",
+            range: "Genetic/Flow Factor",
+            options: [
+                "0: Normal flow",
+                "1: Fixed Defect (Permanent damage)",
+                "2: Reversible Defect (Treatable)"
+            ],
+            type: "category"
+        }
+    };
+
+    // 2. DISPLAY LOGIC (SIDEBAR)
+    function showInfo(key) {
+        const data = infoData[key];
+        const card = document.getElementById('hub-card');
+        
+        let contentHtml = "";
+
+        if (data.type === "numeric") {
+            contentHtml = `
+                <div class="hub-section-inner">
+                    <p class="hub-range"><strong>${data.range}</strong></p>
+                    <div class="example-grid">
+                        <div class="ex-col good">
+                            <strong>Healthy Examples:</strong>
+                            <ul>${data.good.map(i => `<li>${i}</li>`).join('')}</ul>
+                        </div>
+                        <div class="ex-col bad">
+                            <strong>Risk Indicators:</strong>
+                            <ul>${data.bad.map(i => `<li>${i}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                </div>`;
+        } else {
+            contentHtml = `
+                <div class="hub-section-inner">
+                    <p class="hub-range"><strong>${data.range}</strong></p>
+                    <ul class="hub-list">
+                        ${data.options.map(opt => `<li><span class="val-badge">></span> ${opt}</li>`).join('')}
+                    </ul>
+                </div>`;
+        }
+
+        // Render
+        card.classList.remove('active');
+        setTimeout(() => {
+            card.innerHTML = `
+                <span class="hub-label">Knowledge Hub</span>
+                <h3 class="hub-title">${data.title}</h3>
+                <p class="hub-desc">${data.desc}</p>
+                ${contentHtml}
+            `;
+            card.classList.add('active');
+        }, 150);
+    }
+
+    // 3. GENDER EDGE CASE LOGIC
+    function checkGender(select) {
+        if (select.value === 'other') {
+            alert("Note on Model Constraints: Because the 1988 dataset is binary, please select the biological sex or hormonal profile that best fits the patient for this specific calculation.");
+            select.value = ""; 
+        }
+    }
+
+    // 4. MODAL LOGIC
+    const risk = document.getElementById('risk_data').value;
+    
+    window.onload = function() {
+        if (risk === '1') document.getElementById('dangerModal').style.display = 'flex';
+        if (risk === '0') document.getElementById('safeModal').style.display = 'flex';
+    };
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // 5. LOCATION / TODO LOGIC
+    function findHospitals() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    window.open(`http://googleusercontent.com/maps.google.com/search?q=cardiology+hospital&center=${lat},${lon}`);
+                },
+                (err) => {
+                    showToDoList();
+                }
+            );
+        } else {
+            showToDoList();
+        }
+    }
+
+    function showToDoList() {
+        document.getElementById('danger-location-view').style.display = 'none';
+        document.getElementById('danger-todo-view').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
