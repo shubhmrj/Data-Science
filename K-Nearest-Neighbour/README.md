@@ -1,77 +1,84 @@
-# K-Nearest Neighbors (KNN) - Comprehensive Guide
+# K-Nearest Neighbors (KNN) - Advanced Mathematical Framework
 
 ## 📚 Table of Contents
 1. [Introduction](#introduction)
 2. [Mathematical Foundation](#mathematical-foundation)
 3. [Distance Metrics](#distance-metrics)
-4. [KNN Classification](#knn-classification)
-5. [KNN Regression](#knn-regression)
-6. [Algorithm Variants](#algorithm-variants)
-7. [Hyperparameter Optimization](#hyperparameter-optimization)
-8. [Advanced Techniques](#advanced-techniques)
-9. [Performance Analysis](#performance-analysis)
-10. [Practical Applications](#practical-applications)
+4. [Algorithm Variants](#algorithm-variants)
+5. [Theoretical Analysis](#theoretical-analysis)
+6. [Hyperparameter Optimization](#hyperparameter-optimization)
+7. [Computational Complexity](#computational-complexity)
+8. [Performance Evaluation](#performance-evaluation)
+9. [Advanced Applications](#advanced-applications)
+10. [Best Practices](#best-practices)
 
 ---
 
 ## 🎯 Introduction
 
-K-Nearest Neighbors (KNN) is a non-parametric, instance-based learning algorithm used for both classification and regression tasks. Unlike parametric methods that learn a model from training data, KNN makes predictions by finding the k most similar training instances to a query point and aggregating their outputs.
+K-Nearest Neighbors (KNN) is a non-parametric, instance-based learning algorithm that operates on the principle of similarity. Unlike parametric methods that learn a model from training data, KNN stores the entire training dataset and makes predictions based on the k most similar training instances.
 
-### Key Characteristics:
-- **Lazy Learning**: No explicit training phase, stores all training data
-- **Non-parametric**: No assumptions about data distribution
-- **Instance-based**: Predictions based on local neighborhood
-- **Versatile**: Works for both classification and regression
-- **Interpretable**: Easy to understand and visualize
+### Core Principles:
+- **Instance-Based Learning**: No explicit model training phase
+- **Lazy Learning**: Defers computation until prediction time
+- **Non-Parametric**: No assumptions about data distribution
+- **Distance-Based**: Relies on similarity measures between instances
+
+### Historical Context:
+- **Origin**: Proposed by Evelyn Fix and Joseph Hodges (1951)
+- **Popularization**: Extended by Thomas Cover (1967) with theoretical foundations
+- **Modern Applications**: Recommendation systems, pattern recognition, anomaly detection
 
 ---
 
 ## 🧮 Mathematical Foundation
 
-### 1. Basic KNN Algorithm
+### 1. Fundamental Algorithm
 
-For a query point xₚ, the KNN prediction is:
+Given a query point xq and training dataset D = {(xi, yi)} for i = 1 to n:
 
 **Classification:**
 ```
-ŷ = mode({y₁, y₂, ..., yₖ})
+ŷ = argmaxc Σ I(yi = c) for i ∈ Nk(xq)
 ```
-where {y₁, y₂, ..., yₖ} are the labels of the k nearest neighbors.
 
 **Regression:**
 ```
-ŷ = (1/k) × Σᵢ₌₁ᵏ yᵢ
-```
-where yᵢ are the target values of the k nearest neighbors.
-
-### 2. Distance-based Weighting
-
-**Weighted KNN Classification:**
-```
-ŷ = argmaxⱼ Σᵢ₌₁ᵏ wᵢ × I(yᵢ = j)
+ŷ = (1/k) Σ yi for i ∈ Nk(xq)
 ```
 
-**Weighted KNN Regression:**
+Where:
+- Nk(xq) = set of k nearest neighbors to xq
+- I(yi = c) = indicator function (1 if yi = c, 0 otherwise)
+- ŷ = predicted value
+
+### 2. Weighted KNN
+
+**Weighted Classification:**
 ```
-ŷ = (Σᵢ₌₁ᵏ wᵢ × yᵢ) / (Σᵢ₌₁ᵏ wᵢ)
+ŷ = argmaxc Σ wi × I(yi = c) for i ∈ Nk(xq)
 ```
 
-where weights wᵢ are typically:
+**Weighted Regression:**
 ```
-wᵢ = 1 / (d(xₚ, xᵢ) + ε)
+ŷ = Σ (wi × yi) / Σ wi for i ∈ Nk(xq)
 ```
+
+**Weight Functions:**
+- **Inverse Distance**: wi = 1 / d(xq, xi)
+- **Gaussian**: wi = exp(-d(xq, xi)² / (2σ²))
+- **Triangular**: wi = max(0, 1 - d(xq, xi)/dk)
 
 ### 3. Probability Estimation
 
-**Posterior Probability:**
+**Class Probability:**
 ```
-P(y = j | xₚ) = (1/k) × Σᵢ₌₁ᵏ I(yᵢ = j)
+P(y = c | xq) = (1/k) Σ I(yi = c) for i ∈ Nk(xq)
 ```
 
-**Weighted Probability:**
+**Confidence Intervals:**
 ```
-P(y = j | xₚ) = (Σᵢ₌₁ᵏ wᵢ × I(yᵢ = j)) / (Σᵢ₌₁ᵏ wᵢ)
+CI = P(y = c | xq) ± zα/2 × √(P(1-P)/k)
 ```
 
 ---
@@ -82,46 +89,34 @@ P(y = j | xₚ) = (Σᵢ₌₁ᵏ wᵢ × I(yᵢ = j)) / (Σᵢ₌₁ᵏ wᵢ)
 
 **Formula:**
 ```
-d(x, y) = √(Σᵢ₌₁ᵈ (xᵢ - yᵢ)²)
+d(x, y) = √(Σ (xi - yi)²) for i = 1 to d
 ```
 
 **Properties:**
-- Satisfies triangle inequality
-- Sensitive to feature scaling
-- Most commonly used metric
-
-**Implementation:**
-```python
-import numpy as np
-
-def euclidean_distance(x1, x2):
-    return np.sqrt(np.sum((x1 - x2) ** 2))
-
-# Vectorized implementation
-def euclidean_distance_batch(X, y):
-    return np.sqrt(np.sum((X - y) ** 2, axis=1))
-```
+- Metric space: Satisfies triangle inequality
+- Scale-sensitive: Requires feature normalization
+- Computational complexity: O(d)
 
 ### 2. Manhattan Distance
 
 **Formula:**
 ```
-d(x, y) = Σᵢ₌₁ᵈ |xᵢ - yᵢ|
+d(x, y) = Σ |xi - yi| for i = 1 to d
 ```
 
 **Properties:**
-- Less sensitive to outliers
-- Computationally efficient
-- Good for high-dimensional data
+- Robust to outliers
+- Suitable for high-dimensional spaces
+- Less sensitive to scale variations
 
 ### 3. Minkowski Distance
 
-**Formula:**
+**General Formula:**
 ```
-d(x, y) = (Σᵢ₌₁ᵈ |xᵢ - yᵢ|ᵖ)^(1/p)
+d(x, y) = (Σ |xi - yi|^p)^(1/p)
 ```
 
-Special cases:
+**Special Cases:**
 - p = 1: Manhattan distance
 - p = 2: Euclidean distance
 - p → ∞: Chebyshev distance
@@ -133,15 +128,15 @@ Special cases:
 cos(θ) = (x · y) / (||x|| × ||y||)
 ```
 
-**Distance:**
+**Distance Conversion:**
 ```
 d(x, y) = 1 - cos(θ)
 ```
 
 **Properties:**
-- Measures angular similarity
 - Scale-invariant
-- Good for text data
+- Suitable for text data
+- Range: [-1, 1] for similarity, [0, 2] for distance
 
 ### 5. Mahalanobis Distance
 
@@ -150,802 +145,538 @@ d(x, y) = 1 - cos(θ)
 d(x, y) = √((x - y)ᵀ Σ⁻¹ (x - y))
 ```
 
-where Σ is the covariance matrix.
-
 **Properties:**
 - Accounts for feature correlations
 - Scale-invariant
-- Accounts for data distribution
+- Requires covariance matrix estimation
 
 ---
 
-## 🎯 KNN Classification
+## 🔄 Algorithm Variants
 
-### 1. Basic Classification Algorithm
+### 1. Standard KNN
 
-**Pseudocode:**
+**Process:**
+1. Compute distances from query point to all training points
+2. Sort distances in ascending order
+3. Select k nearest neighbors
+4. Aggregate neighbor labels/values
+
+**Decision Boundary:**
+- Piecewise linear for classification
+- Voronoi tessellation in feature space
+
+### 2. Ball Tree Algorithm
+
+**Data Structure:**
+- Hierarchical space partitioning
+- Recursive binary tree
+- Each node: center point and radius
+
+**Query Complexity:**
+- Construction: O(n log n)
+- Query: O(log n) average case
+- Space: O(n)
+
+### 3. KD-Tree Algorithm
+
+**Construction:**
+- Recursively split on median
+- Alternating dimensions
+- Axis-aligned hyperplanes
+
+**Query Process:**
+1. Traverse tree to leaf containing query point
+2. Backtrack checking neighboring regions
+3. Maintain k-best candidates
+
+### 4. Approximate KNN
+
+**Locality Sensitive Hashing (LSH):**
 ```
-function KNN_Classify(X_train, y_train, x_test, k):
-    distances = []
-    
-    for each training point x_i in X_train:
-        d = distance(x_test, x_i)
-        distances.append((d, y_i))
-    
-    sort distances by d
-    k_nearest = distances[:k]
-    
-    labels = [label for (_, label) in k_nearest]
-    prediction = mode(labels)
-    
-    return prediction
-```
-
-### 2. Implementation
-
-```python
-import numpy as np
-from collections import Counter
-from sklearn.base import BaseEstimator, ClassifierMixin
-
-class CustomKNNClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, k=5, metric='euclidean', weights='uniform'):
-        self.k = k
-        self.metric = metric
-        self.weights = weights
-    
-    def fit(self, X, y):
-        self.X_train = X
-        self.y_train = y
-        return self
-    
-    def predict(self, X):
-        predictions = []
-        
-        for x in X:
-            # Calculate distances
-            distances = self._calculate_distances(x)
-            
-            # Get k nearest neighbors
-            k_indices = np.argsort(distances)[:self.k]
-            k_labels = self.y_train[k_indices]
-            
-            # Weighted prediction
-            if self.weights == 'uniform':
-                prediction = Counter(k_labels).most_common(1)[0][0]
-            else:  # distance-weighted
-                k_distances = distances[k_indices]
-                weights = 1 / (k_distances + 1e-8)
-                weighted_votes = {}
-                
-                for label, weight in zip(k_labels, weights):
-                    weighted_votes[label] = weighted_votes.get(label, 0) + weight
-                
-                prediction = max(weighted_votes, key=weighted_votes.get)
-            
-            predictions.append(prediction)
-        
-        return np.array(predictions)
-    
-    def _calculate_distances(self, x):
-        if self.metric == 'euclidean':
-            return np.sqrt(np.sum((self.X_train - x) ** 2, axis=1))
-        elif self.metric == 'manhattan':
-            return np.sum(np.abs(self.X_train - x), axis=1)
-        elif self.metric == 'cosine':
-            dot_product = np.dot(self.X_train, x)
-            norm_x = np.linalg.norm(x)
-            norm_train = np.linalg.norm(self.X_train, axis=1)
-            return 1 - (dot_product / (norm_x * norm_train))
+h(x) = floor((a · x + b) / w)
 ```
 
-### 3. Decision Boundary Visualization
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.datasets import make_classification
-
-def plot_decision_boundary(X, y, k=5):
-    # Create mesh grid
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1),
-                         np.arange(y_min, y_max, 0.1))
-    
-    # Train KNN
-    knn = CustomKNNClassifier(k=k)
-    knn.fit(X, y)
-    
-    # Predict on mesh grid
-    mesh_points = np.c_[xx.ravel(), yy.ravel()]
-    Z = knn.predict(mesh_points)
-    Z = Z.reshape(xx.shape)
-    
-    # Plot
-    plt.figure(figsize=(12, 8))
-    plt.contourf(xx, yy, Z, alpha=0.3, cmap='coolwarm')
-    plt.scatter(X[:, 0], X[:, 1], c=y, cmap='coolwarm', edgecolors='black')
-    plt.title(f'KNN Decision Boundary (k={k})')
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-    plt.show()
-
-# Generate sample data and plot
-X, y = make_classification(n_samples=200, n_features=2, n_redundant=0, 
-                           n_clusters_per_class=1, random_state=42)
-plot_decision_boundary(X, y, k=5)
-```
+**Properties:**
+- Sub-linear query time
+- Approximate results
+- Trade-off: accuracy vs. speed
 
 ---
 
-## 📈 KNN Regression
+## 📊 Theoretical Analysis
 
-### 1. Basic Regression Algorithm
+### 1. Consistency Analysis
 
-**Pseudocode:**
+**Strong Consistency:**
+KNN is strongly consistent if:
 ```
-function KNN_Regress(X_train, y_train, x_test, k):
-    distances = []
-    
-    for each training point x_i in X_train:
-        d = distance(x_test, x_i)
-        distances.append((d, y_i))
-    
-    sort distances by d
-    k_nearest = distances[:k]
-    
-    values = [value for (_, value) in k_nearest]
-    prediction = mean(values)
-    
-    return prediction
+lim(n→∞) P(ŷn ≠ y*) = 0
 ```
 
-### 2. Implementation
+Conditions for consistency:
+- k → ∞ as n → ∞
+- k/n → 0 as n → ∞
+- Training data i.i.d.
 
-```python
-class CustomKNNRegressor(BaseEstimator):
-    def __init__(self, k=5, metric='euclidean', weights='uniform'):
-        self.k = k
-        self.metric = metric
-        self.weights = weights
-    
-    def fit(self, X, y):
-        self.X_train = X
-        self.y_train = y
-        return self
-    
-    def predict(self, X):
-        predictions = []
-        
-        for x in X:
-            # Calculate distances
-            distances = self._calculate_distances(x)
-            
-            # Get k nearest neighbors
-            k_indices = np.argsort(distances)[:self.k]
-            k_values = self.y_train[k_indices]
-            
-            # Weighted prediction
-            if self.weights == 'uniform':
-                prediction = np.mean(k_values)
-            else:  # distance-weighted
-                k_distances = distances[k_indices]
-                weights = 1 / (k_distances + 1e-8)
-                prediction = np.sum(k_values * weights) / np.sum(weights)
-            
-            predictions.append(prediction)
-        
-        return np.array(predictions)
-    
-    def _calculate_distances(self, x):
-        if self.metric == 'euclidean':
-            return np.sqrt(np.sum((self.X_train - x) ** 2, axis=1))
-        elif self.metric == 'manhattan':
-            return np.sum(np.abs(self.X_train - x), axis=1)
+**Optimal k Selection:**
 ```
-
-### 3. Regression Surface Visualization
-
-```python
-def plot_regression_surface(X, y, k=5):
-    # Create mesh grid
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1),
-                         np.arange(y_min, y_max, 0.1))
-    
-    # Train KNN
-    knn = CustomKNNRegressor(k=k)
-    knn.fit(X, y)
-    
-    # Predict on mesh grid
-    mesh_points = np.c_[xx.ravel(), yy.ravel()]
-    Z = knn.predict(mesh_points)
-    Z = Z.reshape(xx.shape)
-    
-    # Plot
-    fig = plt.figure(figsize=(15, 10))
-    
-    # 3D surface plot
-    ax1 = fig.add_subplot(121, projection='3d')
-    surf = ax1.plot_surface(xx, yy, Z, cmap='viridis', alpha=0.8)
-    ax1.scatter(X[:, 0], X[:, 1], y, color='red', s=50)
-    ax1.set_xlabel('Feature 1')
-    ax1.set_ylabel('Feature 2')
-    ax1.set_zlabel('Target')
-    ax1.set_title(f'KNN Regression Surface (k={k})')
-    
-    # 2D contour plot
-    ax2 = fig.add_subplot(122)
-    contour = ax2.contourf(xx, yy, Z, levels=20, cmap='viridis')
-    ax2.scatter(X[:, 0], X[:, 1], c=y, cmap='viridis', edgecolors='black')
-    ax2.set_xlabel('Feature 1')
-    ax2.set_ylabel('Feature 2')
-    ax2.set_title('Regression Contour Plot')
-    plt.colorbar(contour, ax=ax2)
-    
-    plt.tight_layout()
-    plt.show()
-
-# Generate sample regression data
-from sklearn.datasets import make_regression
-X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=42)
-plot_regression_surface(X, y, k=5)
+k* ≈ n^(d/(d+4))
 ```
+Where d is the dimensionality.
 
----
+### 2. Error Bounds
 
-## 🔧 Algorithm Variants
-
-### 1. Ball Tree Algorithm
-
-**Concept:** Hierarchical space partitioning for efficient nearest neighbor search.
-
-**Mathematical Foundation:**
-- Ball: B(x, r) = {y : d(x, y) ≤ r}
-- Tree structure: Each node represents a ball containing a subset of points
-
-**Implementation:**
-```python
-from sklearn.neighbors import BallTree
-
-# Ball Tree for efficient neighbor search
-tree = BallTree(X_train, leaf_size=40)
-distances, indices = tree.query(X_test, k=5)
+**Classification Error Rate:**
 ```
-
-### 2. KD-Tree Algorithm
-
-**Concept:** Binary space partitioning along coordinate axes.
-
-**Mathematical Foundation:**
-- Recursively split space along median of largest variance dimension
-- Each node represents a hyper-rectangle region
-
-**Implementation:**
-```python
-from sklearn.neighbors import KDTree
-
-# KD Tree for low-dimensional data
-tree = KDTree(X_train, leaf_size=40)
-distances, indices = tree.query(X_test, k=5)
+R(k) ≤ R* + 2√(R*(1-R*)/k) + O(n^(-1/d))
 ```
-
-### 3. Approximate Nearest Neighbors
-
-**LSH (Locality Sensitive Hashing):**
-```python
-# Approximate nearest neighbors for large datasets
-from sklearn.neighbors import NearestNeighbors
-
-# Use approximate algorithms
-nn = NearestNeighbors(n_neighbors=5, algorithm='auto', leaf_size=30)
-nn.fit(X_train)
-distances, indices = nn.kneighbors(X_test)
-```
-
----
-
-## 🎛️ Hyperparameter Optimization
-
-### 1. K Selection
-
-**Cross-Validation Approach:**
-```python
-from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsClassifier
-import matplotlib.pyplot as plt
-
-def find_optimal_k(X, y, max_k=31):
-    cv_scores = []
-    k_values = range(1, max_k + 1, 2)
-    
-    for k in k_values:
-        knn = KNeighborsClassifier(n_neighbors=k)
-        scores = cross_val_score(knn, X, y, cv=5, scoring='accuracy')
-        cv_scores.append(scores.mean())
-    
-    # Plot performance vs k
-    plt.figure(figsize=(10, 6))
-    plt.plot(k_values, cv_scores, 'bo-')
-    plt.xlabel('Number of Neighbors (k)')
-    plt.ylabel('Cross-Validation Accuracy')
-    plt.title('KNN Performance vs k')
-    plt.grid(True)
-    plt.show()
-    
-    optimal_k = k_values[np.argmax(cv_scores)]
-    return optimal_k, max(cv_scores)
-
-# Usage
-optimal_k, best_score = find_optimal_k(X_train, y_train)
-print(f"Optimal k: {optimal_k}, Best score: {best_score:.3f}")
-```
-
-### 2. Grid Search with Multiple Parameters
-
-```python
-from sklearn.model_selection import GridSearchCV
-
-param_grid = {
-    'n_neighbors': range(1, 31, 2),
-    'weights': ['uniform', 'distance'],
-    'metric': ['euclidean', 'manhattan', 'cosine'],
-    'algorithm': ['auto', 'ball_tree', 'kd_tree']
-}
-
-knn = KNeighborsClassifier()
-grid_search = GridSearchCV(knn, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
-grid_search.fit(X_train, y_train)
-
-print(f"Best parameters: {grid_search.best_params_}")
-print(f"Best cross-validation score: {grid_search.best_score_:.3f}")
-```
-
-### 3. Bayesian Optimization
-
-```python
-from skopt import gp_minimize
-from skopt.space import Real, Integer, Categorical
-from skopt.utils import use_named_args
-
-def knn_cv_score(params):
-    k, weights, metric = params
-    
-    knn = KNeighborsClassifier(
-        n_neighbors=k,
-        weights=weights,
-        metric=metric
-    )
-    
-    scores = cross_val_score(knn, X_train, y_train, cv=5, scoring='accuracy')
-    return -scores.mean()  # Minimize negative accuracy
-
-space = [
-    Integer(1, 30, name='n_neighbors'),
-    Categorical(['uniform', 'distance'], name='weights'),
-    Categorical(['euclidean', 'manhattan', 'cosine'], name='metric')
-]
-
-result = gp_minimize(knn_cv_score, space, n_calls=50, random_state=42)
-print(f"Best parameters: k={result.x[0]}, weights={result.x[1]}, metric={result.x[2]}")
-```
-
----
-
-## 🚀 Advanced Techniques
-
-### 1. Feature Scaling and Normalization
-
-**Standardization:**
-```python
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-
-# Pipeline with scaling
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),
-    ('knn', KNeighborsClassifier(n_neighbors=5))
-])
-
-pipeline.fit(X_train, y_train)
-```
-
-**Min-Max Scaling:**
-```python
-from sklearn.preprocessing import MinMaxScaler
-
-pipeline = Pipeline([
-    ('scaler', MinMaxScaler()),
-    ('knn', KNeighborsClassifier(n_neighbors=5))
-])
-```
-
-### 2. Dimensionality Reduction
-
-**PCA + KNN:**
-```python
-from sklearn.decomposition import PCA
-from sklearn.pipeline import Pipeline
-
-# Pipeline with PCA
-pipeline = Pipeline([
-    ('pca', PCA(n_components=0.95)),  # Keep 95% variance
-    ('knn', KNeighborsClassifier(n_neighbors=5))
-])
-
-scores = cross_val_score(pipeline, X, y, cv=5)
-print(f"PCA + KNN CV Score: {scores.mean():.3f}")
-```
-
-### 3. Ensemble Methods
-
-**Bagging with KNN:**
-```python
-from sklearn.ensemble import BaggingClassifier
-
-# Bagging KNN for variance reduction
-bagging_knn = BaggingClassifier(
-    base_estimator=KNeighborsClassifier(n_neighbors=5),
-    n_estimators=10,
-    max_samples=0.8,
-    max_features=0.8,
-    random_state=42
-)
-
-bagging_knn.fit(X_train, y_train)
-```
-
-### 4. Adaptive KNN
-
-**Distance-based K Selection:**
-```python
-class AdaptiveKNN:
-    def __init__(self, base_k=5, max_k=50):
-        self.base_k = base_k
-        self.max_k = max_k
-    
-    def fit(self, X, y):
-        self.X_train = X
-        self.y_train = y
-        return self
-    
-    def predict(self, X):
-        predictions = []
-        
-        for x in X:
-            # Calculate distances to all training points
-            distances = np.sqrt(np.sum((self.X_train - x) ** 2, axis=1))
-            
-            # Adaptive k based on distance distribution
-            sorted_distances = np.sort(distances)
-            
-            # Find elbow point in distance curve
-            k = self._find_elbow_k(sorted_distances)
-            k = min(k, self.max_k)
-            
-            # Get k nearest neighbors
-            k_indices = np.argsort(distances)[:k]
-            k_labels = self.y_train[k_indices]
-            
-            # Majority vote
-            prediction = Counter(k_labels).most_common(1)[0][0]
-            predictions.append(prediction)
-        
-        return np.array(predictions)
-    
-    def _find_elbow_k(self, distances):
-        # Simple elbow detection using second derivative
-        for k in range(self.base_k, len(distances)):
-            if k < len(distances) - 1:
-                second_derivative = distances[k+1] - 2*distances[k] + distances[k-1]
-                if second_derivative > 0:  # Elbow point
-                    return k
-        return self.base_k
-```
-
----
-
-## 📊 Performance Analysis
-
-### 1. Computational Complexity
-
-| Operation | Brute Force | KD-Tree | Ball Tree |
-|-----------|-------------|---------|-----------|
-| Training | O(1) | O(n log n) | O(n log n) |
-| Prediction | O(n × d) | O(log n × d) | O(log n × d) |
-| Memory | O(n × d) | O(n × d) | O(n × d) |
 
 Where:
-- n = number of training samples
-- d = number of dimensions
+- R(k) = error rate with k neighbors
+- R* = Bayes optimal error rate
 
-### 2. Curse of Dimensionality
+**Regression Error:**
+```
+E[(ŷ - y)²] ≤ C × n^(-4/(d+4))
+```
+
+### 3. VC Dimension
+
+**VC Dimension of KNN:**
+```
+VCdim = ∞ (for infinite k)
+VCdim = O(n) (for finite k)
+```
+
+**Implications:**
+- Universal approximator
+- Requires careful regularization
+- High capacity for overfitting
+
+---
+
+## ⚙️ Hyperparameter Optimization
+
+### 1. K Value Selection
+
+**Cross-Validation Approach:**
+```
+k* = argmin(k) CV_error(k)
+```
+
+**Theoretical Guidelines:**
+- Small k: Low bias, high variance
+- Large k: High bias, low variance
+- Optimal: Balance between bias and variance
+
+**Heuristic Rules:**
+- k ≈ √n for classification
+- k ≈ n^(1/4) for regression
+- Domain-specific adjustments
+
+### 2. Distance Metric Selection
+
+**Metric Learning:**
+```
+L* = argmin(L) Σ ℓ(yi, ŷi(L))
+```
+
+**Mahalanobis Learning:**
+```
+M = WᵀW where W ∈ R^(d×d')
+```
+
+### 3. Weight Function Optimization
+
+**Parameter Tuning:**
+- Gaussian kernel bandwidth (σ)
+- Distance decay rate
+- Neighborhood radius
+
+---
+
+## 📈 Computational Complexity Analysis
+
+### 1. Time Complexity
+
+**Naive Implementation:**
+- Training: O(1)
+- Prediction: O(n × d)
+- Total: O(n × d)
+
+**Optimized Implementations:**
+
+| Algorithm | Training | Prediction | Space |
+|-----------|-----------|------------|-------|
+| KD-Tree | O(n log n) | O(log n) | O(n) |
+| Ball Tree | O(n log n) | O(log n) | O(n) |
+| LSH | O(n) | O(1) | O(n) |
+
+### 2. Space Complexity
+
+**Memory Requirements:**
+- Training data: O(n × d)
+- Distance matrix: O(n²) (if precomputed)
+- Tree structures: O(n)
+
+### 3. Curse of Dimensionality
 
 **Distance Concentration:**
 ```
-lim(d→∞) Var(d(x, y)) / E[d(x, y)]² → 0
+lim(d→∞) Var(d(x, y)) / E[d(x, y)]² = 0
 ```
 
-**Impact on KNN:**
-- In high dimensions, all points become equidistant
-- Nearest neighbor concept becomes meaningless
-- Dimensionality reduction becomes crucial
-
-### 3. Bias-Variance Tradeoff
-
-**Bias:**
-- High k → High bias (underfitting)
-- Low k → Low bias (overfitting)
-
-**Variance:**
-- High k → Low variance
-- Low k → High variance
-
-**Optimal k:**
-```
-k* = argminₖ (Bias²(k) + Variance(k))
-```
-
-### 4. Performance Metrics
-
-**Classification:**
-```python
-from sklearn.metrics import classification_report, confusion_matrix
-import seaborn as sns
-
-def evaluate_classifier(y_true, y_pred, class_names=None):
-    # Classification report
-    print("Classification Report:")
-    print(classification_report(y_true, y_pred, target_names=class_names))
-    
-    # Confusion matrix
-    cm = confusion_matrix(y_true, y_pred)
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                xticklabels=class_names, yticklabels=class_names)
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.title('Confusion Matrix')
-    plt.show()
-```
-
-**Regression:**
-```python
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-
-def evaluate_regressor(y_true, y_pred):
-    r2 = r2_score(y_true, y_pred)
-    mae = mean_absolute_error(y_true, y_pred)
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
-    
-    print(f"R² Score: {r2:.3f}")
-    print(f"MAE: {mae:.3f}")
-    print(f"MSE: {mse:.3f}")
-    print(f"RMSE: {rmse:.3f}")
-    
-    # Residual plot
-    residuals = y_true - y_pred
-    plt.figure(figsize=(12, 4))
-    
-    plt.subplot(1, 2, 1)
-    plt.scatter(y_pred, residuals, alpha=0.6)
-    plt.axhline(y=0, color='r', linestyle='--')
-    plt.xlabel('Predicted Values')
-    plt.ylabel('Residuals')
-    plt.title('Residual Plot')
-    
-    plt.subplot(1, 2, 2)
-    plt.hist(residuals, bins=30, alpha=0.7)
-    plt.xlabel('Residuals')
-    plt.ylabel('Frequency')
-    plt.title('Residual Distribution')
-    
-    plt.tight_layout()
-    plt.show()
-```
+**Implications:**
+- Distance metrics become less discriminative
+- Need for dimensionality reduction
+- Feature selection importance
 
 ---
 
-## 🎯 Practical Applications
+## 📊 Performance Evaluation Metrics
 
-### 1. Image Classification
+### 1. Classification Metrics
 
-**Pixel-based KNN:**
-```python
-def flatten_images(images):
-    """Flatten images for KNN processing"""
-    return images.reshape(images.shape[0], -1)
-
-# Example with MNIST-like data
-X_flat = flatten_images(X_images)
-knn = KNeighborsClassifier(n_neighbors=5, metric='euclidean')
-knn.fit(X_flat, y_labels)
+**Accuracy:**
+```
+Accuracy = (TP + TN) / (TP + TN + FP + FN)
 ```
 
-### 2. Recommendation Systems
-
-**Item-based KNN:**
-```python
-def knn_recommendations(user_item_matrix, user_id, k=10):
-    """Find similar users and recommend items"""
-    user_vector = user_item_matrix[user_id]
-    
-    # Calculate similarities
-    similarities = []
-    for other_user in user_item_matrix.index:
-        if other_user != user_id:
-            similarity = cosine_similarity(user_vector, user_item_matrix[other_user])
-            similarities.append((similarity, other_user))
-    
-    # Get k most similar users
-    similarities.sort(reverse=True)
-    similar_users = similarities[:k]
-    
-    # Recommend items liked by similar users
-    recommendations = {}
-    for similarity, other_user in similar_users:
-        for item, rating in user_item_matrix.loc[other_user].items():
-            if rating > 0 and user_vector[item] == 0:
-                recommendations[item] = recommendations.get(item, 0) + similarity * rating
-    
-    return sorted(recommendations.items(), key=lambda x: x[1], reverse=True)
+**Precision and Recall:**
+```
+Precision = TP / (TP + FP)
+Recall = TP / (TP + FN)
+F1-Score = 2 × (Precision × Recall) / (Precision + Recall)
 ```
 
-### 3. Anomaly Detection
-
-**Distance-based Anomaly Detection:**
-```python
-class KNNAnomalyDetector:
-    def __init__(self, k=5, threshold_percentile=95):
-        self.k = k
-        self.threshold_percentile = threshold_percentile
-    
-    def fit(self, X):
-        self.X_train = X
-        # Calculate average distance to k nearest neighbors for training data
-        self.avg_distances = []
-        for x in X:
-            distances = np.sqrt(np.sum((X - x) ** 2, axis=1))
-            k_nearest = np.sort(distances)[1:self.k+1]  # Exclude self
-            avg_dist = np.mean(k_nearest)
-            self.avg_distances.append(avg_dist)
-        
-        # Set threshold
-        self.threshold = np.percentile(self.avg_distances, self.threshold_percentile)
-        return self
-    
-    def predict(self, X):
-        anomalies = []
-        for x in X:
-            distances = np.sqrt(np.sum((self.X_train - x) ** 2, axis=1))
-            k_nearest = np.sort(distances)[:self.k]
-            avg_dist = np.mean(k_nearest)
-            
-            is_anomaly = avg_dist > self.threshold
-            anomalies.append(is_anomaly)
-        
-        return np.array(anomalies)
+**ROC-AUC:**
 ```
+AUC = ∫₀¹ TPR(FPR⁻¹(u)) du
+```
+
+### 2. Regression Metrics
+
+**Mean Squared Error:**
+```
+MSE = (1/n) Σ (ŷi - yi)²
+```
+
+**Root Mean Squared Error:**
+```
+RMSE = √MSE
+```
+
+**R² Score:**
+```
+R² = 1 - Σ(yi - ŷi)² / Σ(yi - ȳ)²
+```
+
+**Mean Absolute Error:**
+```
+MAE = (1/n) Σ |ŷi - yi|
+```
+
+### 3. Statistical Significance
+
+**McNemar's Test:**
+```
+χ² = (|b - c| - 1)² / (b + c)
+```
+
+Where b and c are discordant pairs.
 
 ---
 
-## 📈 Project Structure
+## 🚀 Advanced Applications
+
+### 1. High-Dimensional Data
+
+**Dimensionality Reduction Integration:**
+- PCA preprocessing
+- Feature selection
+- Random projection
+
+**Adaptive Distance Metrics:**
+- Local metric learning
+- Subspace clustering
+- Manifold learning integration
+
+### 2. Large-Scale Systems
+
+**Distributed KNN:**
+- MapReduce implementation
+- Parameter server architecture
+- Federated learning applications
+
+**Streaming KNN:**
+- Sliding window approaches
+- Concept drift adaptation
+- Online learning variants
+
+### 3. Specialized Domains
+
+**Time Series KNN:**
+- Dynamic Time Warping distance
+- Shape-based similarity
+- Temporal pattern recognition
+
+**Graph KNN:**
+- Graph distance metrics
+- Network similarity measures
+- Social network applications
+
+**Image Recognition:**
+- Histogram-based features
+- Deep learning feature extraction
+- Spatial pyramid matching
+
+---
+
+## 🎯 Best Practices
+
+### 1. Data Preprocessing
+
+**Feature Scaling:**
+- Standardization: z-score normalization
+- Min-max scaling: [0, 1] range
+- Robust scaling: median and IQR
+
+**Feature Engineering:**
+- Dimensionality reduction for high-dimensional data
+- Feature selection based on relevance
+- Domain-specific transformations
+
+### 2. Model Selection
+
+**K Value Selection:**
+- Cross-validation for optimal k
+- Consider class imbalance
+- Account for noise levels
+
+**Distance Metric Choice:**
+- Euclidean for continuous features
+- Manhattan for high-dimensional data
+- Hamming for binary features
+- Cosine for text data
+
+### 3. Performance Optimization
+
+**Algorithm Selection:**
+- KD-tree for low-dimensional data (< 20 dimensions)
+- Ball tree for higher dimensions
+- Brute force for very small datasets
+- Approximate methods for large datasets
+
+**Memory Management:**
+- Sparse data structures
+- Efficient distance computations
+- Batch processing for large datasets
+
+### 4. Validation Strategies
+
+**Cross-Validation:**
+- Stratified k-fold for classification
+- Time series split for temporal data
+- Leave-one-out for small datasets
+
+**Statistical Testing:**
+- Permutation tests for significance
+- Bootstrap confidence intervals
+- Multiple comparison corrections
+
+---
+
+## 📁 Project Structure
 
 ```
 K-Nearest-Neighbour/
 ├── README.md                          # This file
 ├── Classifier/
 │   ├── KNNClassifier.ipynb           # Basic classification implementation
-│   └── advance-knn-classifier.ipynb   # Advanced classification techniques
+│   └── advance-knn-classifier.ipynb  # Advanced classification techniques
 └── Regressor/
     └── KNNRegressor.ipynb             # Regression implementation
 ```
 
 ---
 
-## 🚀 Getting Started
+## 📊 Mathematical Visualizations
 
-### 1. Environment Setup
-```bash
-# Install required packages
-pip install numpy pandas matplotlib seaborn scikit-learn
-pip install scipy plotly skopt
+### 1. Decision Boundary Analysis
+
+**Voronoi Diagrams:**
+- Partition of feature space into regions
+- Each region contains points closest to a training example
+- Decision boundaries at region edges
+
+**Mathematical Representation:**
+```
+V(pi) = {x ∈ ℝ^d : d(x, pi) ≤ d(x, pj) for all j ≠ i}
 ```
 
-### 2. Running the Notebooks
-1. **Basic Classification**: `Classifier/KNNClassifier.ipynb`
-   - Implements basic KNN classification
-   - Demonstrates distance calculations
-   - Shows performance evaluation
+### 2. Distance Distribution
 
-2. **Advanced Classification**: `Classifier/advance-knn-classifier.ipynb`
-   - Advanced KNN variants
-   - Hyperparameter optimization
-   - Performance analysis
+**Distance Histograms:**
+- Analysis of nearest neighbor distances
+- Identification of optimal k values
+- Outlier detection through distance analysis
 
-3. **Regression**: `Regressor/KNNRegressor.ipynb`
-   - KNN for regression tasks
-   - Weighted predictions
-   - Evaluation metrics
+**Statistical Properties:**
+- Mean nearest neighbor distance
+- Variance and distribution shape
+- Dimension-dependent scaling
 
-### 3. Quick Start Example
-```python
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
+### 3. Error Analysis
 
-# Generate sample data
-X, y = make_classification(n_samples=1000, n_features=2, n_redundant=0, 
-                           n_clusters_per_class=1, random_state=42)
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-# Create and train KNN
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(X_train, y_train)
-
-# Make predictions
-y_pred = knn.predict(X_test)
-
-# Evaluate
-accuracy = knn.score(X_test, y_test)
-print(f"Accuracy: {accuracy:.3f}")
+**Bias-Variance Tradeoff:**
 ```
+Total Error = Bias² + Variance + Irreducible Error
+```
+
+**K-Dependence:**
+- Small k: Low bias, high variance
+- Large k: High bias, low variance
+- Optimal k: Minimum total error
 
 ---
 
-## 📊 Key Insights from Projects
+## 🔬 Theoretical Properties
 
-### Classification Analysis
-- **Optimal k**: Typically between 3-15 for most datasets
-- **Distance Metrics**: Euclidean works well for normalized data
-- **Feature Scaling**: Critical for distance-based algorithms
-- **Curse of Dimensionality**: Performance degrades in high dimensions
+### 1. Convergence Properties
 
-### Regression Analysis
-- **Smoothing Effect**: Higher k creates smoother predictions
-- **Local Patterns**: KNN captures non-linear relationships well
-- **Noise Sensitivity**: Outliers can significantly affect predictions
-- **Computational Cost**: Prediction time scales with dataset size
+**Almost Sure Convergence:**
+```
+P(lim(n→∞) ŷn = y*) = 1
+```
 
-### Performance Considerations
-- **Training Time**: O(1) for basic KNN (lazy learning)
-- **Prediction Time**: O(n × d) for brute force, O(log n × d) for tree-based
-- **Memory Usage**: O(n × d) to store all training data
-- **Scalability**: Tree-based methods scale better for large datasets
+**Rate of Convergence:**
+- Classification: O(n^(-1/(d+2)))
+- Regression: O(n^(-2/(d+4)))
+
+### 2. Asymptotic Optimality
+
+**Consistency Conditions:**
+- k → ∞ and k/n → 0
+- Smooth probability density
+- Bounded support
+
+**Risk Bounds:**
+```
+Rn - R* = O(n^(-α)) where α > 0
+```
+
+### 3. Minimax Optimality
+
+**Optimal Rate:**
+- Achieves minimax optimal rate for certain function classes
+- Adaptivity to smoothness parameters
+- Dimension-free rates for special cases
+
+---
+
+## 📈 Performance Characteristics
+
+### 1. Scalability Analysis
+
+**Dataset Size Impact:**
+- Linear scaling with n for naive implementation
+- Logarithmic scaling with tree-based methods
+- Constant scaling with approximate methods
+
+**Dimensionality Impact:**
+- Exponential growth in required samples
+- Distance concentration effects
+- Feature selection necessity
+
+### 2. Robustness Properties
+
+**Noise Tolerance:**
+- Robust to label noise with appropriate k
+- Sensitive to feature noise
+- Outlier resistance through voting
+
+**Missing Data Handling:**
+- Partial distance computations
+- Imputation strategies
+- Robust distance metrics
+
+---
+
+## 🎯 Advanced Considerations
+
+### 1. Algorithmic Improvements
+
+**Fast Approximate Methods:**
+- Random projection trees
+- Hierarchical navigable small world graphs
+- Product quantization
+
+**Parallel Implementations:**
+- GPU acceleration
+- Distributed computing
+- MapReduce frameworks
+
+### 2. Theoretical Extensions
+
+**Non-Euclidean Spaces:**
+- Manifold learning integration
+- Graph-based distances
+- Information-theoretic metrics
+
+**Probabilistic Extensions:**
+- Bayesian KNN
+- Probabilistic distance metrics
+- Uncertainty quantification
+
+---
+
+## 📚 Research Directions
+
+### 1. Current Challenges
+
+**High-Dimensional Data:**
+- Curse of dimensionality mitigation
+- Adaptive distance learning
+- Feature selection integration
+
+**Large-Scale Applications:**
+- Distributed algorithms
+- Memory-efficient implementations
+- Real-time predictions
+
+### 2. Emerging Applications
+
+**Deep Learning Integration:**
+- Feature learning for KNN
+- Hybrid architectures
+- End-to-end optimization
+
+**Quantum Computing:**
+- Quantum distance calculations
+- Quantum speedup potential
+- Quantum-inspired algorithms
 
 ---
 
 ## 🎯 Conclusion
 
-K-Nearest Neighbors is a fundamental algorithm in machine learning that exemplifies instance-based learning. Its simplicity and interpretability make it an excellent baseline algorithm and educational tool.
+K-Nearest Neighbors represents a fundamental and versatile algorithm in machine learning, with strong theoretical foundations and wide-ranging applications. Its simplicity belies sophisticated mathematical properties and practical considerations.
 
-**Key Takeaways:**
-1. **Simplicity**: Easy to understand and implement
-2. **Versatility**: Works for both classification and regression
-3. **Non-parametric**: No assumptions about data distribution
-4. **Local Learning**: Captures local patterns in data
-5. **Interpretable**: Easy to explain predictions
+**Key Insights:**
+- **Theoretical Soundness**: Strong consistency and asymptotic optimality under appropriate conditions
+- **Practical Versatility**: Applicable to classification, regression, and density estimation
+- **Computational Challenges**: Scalability issues addressed through advanced algorithms
+- **Parameter Sensitivity**: Performance highly dependent on k and distance metric selection
+- **Dimensionality Effects**: Performance degrades in high-dimensional spaces without preprocessing
 
-**Best Practices:**
-- Always scale features before applying KNN
-- Use cross-validation to select optimal k
-- Consider dimensionality reduction for high-dimensional data
-- Use tree-based algorithms for large datasets
-- Apply weighted voting for imbalanced datasets
+**Future Directions:**
+- Integration with deep learning architectures
+- Development of more efficient approximate algorithms
+- Application to emerging data modalities
+- Theoretical extensions to non-Euclidean spaces
 
-**When to Use KNN:**
-- Small to medium-sized datasets
-- When interpretability is important
-- For baseline comparisons
-- When local patterns are important
-- Non-linear decision boundaries are expected
-
-The projects in this repository provide comprehensive implementations and examples that demonstrate both the theoretical foundations and practical applications of KNN algorithms.
+The algorithm's enduring relevance stems from its intuitive appeal, theoretical guarantees, and adaptability to diverse problem domains. Understanding its mathematical foundations enables practitioners to apply KNN effectively and develop improved variants for specific applications.
 
 ---
 
