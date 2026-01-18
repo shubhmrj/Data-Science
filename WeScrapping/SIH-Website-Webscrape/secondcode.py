@@ -17,7 +17,6 @@ async def main():
         html = await page.content()
         await browser.close()
 
-    # Parse with BeautifulSoup
     soup = BeautifulSoup(html, "html.parser")
     rows = soup.select("#dataTablePS tbody tr")
 
