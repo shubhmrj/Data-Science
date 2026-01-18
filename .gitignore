@@ -166,4 +166,3 @@ cython_debug/
 *_REMOTE_*.txt
 .env
 *.env
-# End of https://mrkandreev.name/snippets/gitignore-generator/#Git
