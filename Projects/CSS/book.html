@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Realistic 3D Book</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400&display=swap');
+
+
+
+
+:root {
+        --book-width: 400px;
+        --book-height: 600px;
+        --page-width: calc(var(--book-width) / 2);
+        --cover-thickness: 5px;
+        --page-thickness: 0.5px;
+        --total-pages: 7;
+        --page-color: #f8f5e6;
+        --cover-color: #8B4513;
+        --spine-color: #6B3E26;
+        --text-color: #333;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+        font-family: 'Lora', serif;
+        overflow: hidden;
+        perspective: 2000px;
+    }
+    
+    .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .book-container {
+        position: relative;
+        width: var(--book-width);
+        height: var(--book-height);
+        transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        will-change: transform;
+    }
+    
+    .book {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease;
+    }
+    
+    .book-cover {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        background-color: var(--cover-color);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+        border-radius: 5px 15px 15px 5px;
+        box-shadow: 
+            0 10px 30px rgba(0, 0, 0, 0.7),
+            inset 0 0 30px rgba(0, 0, 0, 0.4);
+        transform-origin: left center;
+        transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        overflow: hidden;
+        backface-visibility: hidden;
+        will-change: transform;
+    }
+    
+    .front-cover {
+        transform: translateZ(var(--cover-thickness));
+        z-index: 20;
+    }
+    
+    .back-cover {
+        transform: translateZ(calc(-1 * var(--cover-thickness) - var(--total-pages) * var(--page-thickness)));
+        z-index: 1;
+    }
+    
+    .book-spine {
+        position: absolute;
+        width: calc(2 * var(--cover-thickness) + var(--total-pages) * var(--page-thickness));
+        height: 100%;
+        left: calc(-1 * var(--cover-thickness));
+        transform: rotateY(90deg) translateZ(calc(var(--book-width) / 2));
+        background-color: var(--spine-color);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+        border-radius: 3px;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 0;
+    }
+    
+    .spine-title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateZ(90deg);
+        color: rgba(255, 255, 255, 0.9);
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+        width: 80%;
+        text-align: center;
+    }
+    
+    .cover-content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+    
+    .cover-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .cover-subtitle {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        margin-bottom: 40px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .cover-author {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        margin-top: 60px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .cover-decoration {
+        position: absolute;
+        width: 90%;
+        height: 90%;
+        top: 5%;
+        left: 5%;
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+    
+    .cover-emboss {
+        position: absolute;
+        width: 60%;
+        height: 40%;
+        top: 30%;
+        left: 20%;
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+    
+    .page {
+        position: absolute;
+        width: var(--page-width);
+        height: 100%;
+        top: 0;
+        right: 0;
+        background-color: var(--page-color);
+        transform-origin: left center;
+        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        border-radius: 0 5px 5px 0;
+        background-image: 
+            linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%),
+            url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.03 0' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='%23f8f5e6'/%3E%3C/svg%3E");
+        box-shadow: 
+            -5px 0 15px rgba(0, 0, 0, 0.1),
+            inset -5px 0 5px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        backface-visibility: hidden;
+        will-change: transform;
+    }
+    
+    .page-content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        padding: 30px;
+        box-sizing: border-box;
+        color: var(--text-color);
+        font-size: 0.9rem;
+        line-height: 1.6;
+        column-count: 1;
+        column-gap: 20px;
+        text-align: justify;
+    }
+    
+    .page-content h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        color: #222;
+    }
+    
+    .page-content p {
+        margin-bottom: 15px;
+        text-indent: 20px;
+    }
+    
+    .page-content .dropcap {
+        float: left;
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5em;
+        line-height: 0.8em;
+        padding-right: 0.1em;
+        padding-top: 0.1em;
+        color: #8B4513;
+    }
+    
+    .page-number {
+        position: absolute;
+        bottom: 20px;
+        font-size: 0.8rem;
+        color: #777;
+    }
+    
+    .page-number-left {
+        left: 30px;
+    }
+    
+    .page-number-right {
+        right: 30px;
+    }
+    
+    .page-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+    
+    .controls {
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 20px;
+        z-index: 100;
+    }
+    
+    .control-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        font-family: 'Lora', serif;
+    }
+    
+    .control-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+    }
+    
+    .control-btn:active {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .page-edge {
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        right: 0;
+        background: linear-gradient(to right, 
+            rgba(0,0,0,0.05), 
+            rgba(0,0,0,0.02) 50%, 
+            rgba(255,255,255,0.3) 51%, 
+            rgba(0,0,0,0.02) 52%, 
+            rgba(0,0,0,0.0));
+    }
+    
+    .book-shadow {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        bottom: -30px;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 70%);
+        transform: rotateX(90deg);
+        filter: blur(5px);
+        opacity: 0.8;
+        transition: all 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+    
+    .light-glare {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, 
+            rgba(255,255,255,0.25) 0%, 
+            rgba(255,255,255,0) 50%);
+        pointer-events: none;
+    }
+    
+    .bookmark {
+        position: absolute;
+        width: 40px;
+        height: 120px;
+        background: #e74c3c;
+        top: -20px;
+        right: 40px;
+        border-radius: 5px;
+        transform-origin: bottom;
+        transform: rotateZ(0deg);
+        transition: transform 0.3s ease;
+        z-index: 15;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    
+    .bookmark:hover {
+        transform: rotateZ(-10deg);
+    }
+    
+    .bookmark::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 20px;
+        bottom: 0;
+        background: #c0392b;
+        border-radius: 0 0 5px 5px;
+    }
+    
+    .scene::before {
+        content: '';
+        position: absolute;
+        width: 150%;
+        height: 100px;
+        bottom: -50px;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 70%);
+        filter: blur(10px);
+        z-index: -1;
+    }
+    
+    .page-turn-hint {
+        position: absolute;
+        bottom: 50px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: pulse 2s infinite;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    }
+    
+    .page-turn-hint::after {
+        content: '→';
+        color: white;
+        font-size: 20px;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    .status-indicator {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.5);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+    
+    @media (max-width: 768px) {
+        :root {
+            --book-width: 300px;
+            --book-height: 450px;
+        }
+        
+        .cover-title {
+            font-size: 1.8rem;
+        }
+        
+        .cover-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .page-content {
+            font-size: 0.8rem;
+            padding: 20px;
+        }
+        
+        .controls {
+            flex-direction: column;
+            right: 20px;
+            left: auto;
+            transform: none;
+            bottom: 50%;
+            transform: translateY(50%);
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="scene">
+        <div class="book-container" id="book-container">
+            <div class="book" id="book">
+                <!-- Book Spine -->
+                <div class="book-spine">
+                    <div class="spine-title">The Art of Literature</div>
+            </div>
+            
+            <!-- Front Cover -->
+            <div class="book-cover front-cover" id="front-cover">
+                <div class="cover-content">
+                    <div class="cover-decoration"></div>
+                    <div class="cover-emboss"></div>
+                    <h1 class="cover-title">The Art of Literature</h1>
+                    <h2 class="cover-subtitle">A Journey Through Words</h2>
+                    <p class="cover-author">By Jonathan Blackwood</p>
+                </div>
+                <div class="light-glare"></div>
+                <div class="bookmark"></div>
+            </div>
+            
+            <!-- Pages -->
+            <div class="page" id="page-1" style="z-index: 14;">
+                <div class="page-content">
+                    <h2>Foreword</h2>
+                    <p><span class="dropcap">I</span>n the vast landscape of human expression, literature stands as perhaps our most enduring art form. Through carefully chosen words arranged with purpose and passion, we have found ways to capture the full spectrum of human experience—from the heights of joy to the depths of sorrow, from the mundane to the transcendent.</p>
+                    <p>This book represents a humble attempt to explore the rich tapestry of literary tradition that has shaped our understanding of ourselves and the world around us. As we journey through these pages together, we will examine the techniques, movements, and masterpieces that have defined the written word across centuries.</p>
+                    <p>My hope is that this volume will serve not only as a guide but as an inspiration—a reminder of the power that resides in language and the endless possibilities it offers to those who would wield it with care and conviction.</p>
+                    <div class="page-number page-number-right">i</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <h2>Introduction</h2>
+                        <p><span class="dropcap">L</span>iterature, in its purest form, is the art of using language to express the human condition. It transcends mere communication to become something greater—a mirror reflecting our deepest truths, a window opening onto new perspectives, a bridge connecting minds across time and space.</p>
+                        <p>Throughout history, writers have developed countless approaches to this art, each contributing to a rich tradition that continues to evolve with every generation. From the oral storytelling traditions of ancient civilizations to the digital narratives of the modern age, the fundamental desire to share experiences through words remains unchanged.</p>
+                        <p>In the chapters that follow, we will explore the elements that make literature not just meaningful but essential to our understanding of what it means to be human.</p>
+                        <div class="page-number page-number-left">ii</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-1"></div>
+            </div>
+            
+            <div class="page" id="page-2" style="z-index: 13;">
+                <div class="page-content">
+                    <h2>Chapter One: The Narrative Voice</h2>
+                    <p><span class="dropcap">T</span>he voice that guides us through a story is perhaps the most crucial element in determining how we experience the narrative. Whether intimate or distant, reliable or questionable, the narrative voice establishes the relationship between the reader and the text.</p>
+                    <p>First-person narration invites us into the mind of a character, allowing us to see the world through their eyes, complete with all their biases and limitations. Third-person narration, by contrast, can offer a broader perspective, moving freely between characters and settings to provide a more comprehensive view.</p>
+                    <p>The omniscient narrator, knowing all and seeing all, represents one extreme of the narrative spectrum. At the other end lies the unreliable narrator, whose perception of events may be distorted by prejudice, madness, or simple naivety.</p>
+                    <div class="page-number page-number-right">1</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <p>Consider the difference between Ishmael's direct address in Melville's "Moby-Dick" ("Call me Ishmael") and the detached, godlike perspective of Tolstoy in "War and Peace." Each approach creates a distinct relationship with the reader and serves different narrative purposes.</p>
+                        <p>The choice of narrative voice is never neutral; it fundamentally shapes how a story unfolds and how we interpret its events. A skilled author selects the voice that best serves their artistic vision, sometimes even shifting between different perspectives to achieve specific effects.</p>
+                        <p>In modern literature, we've seen increasing experimentation with narrative voice, including collective narrators ("we"), second-person address ("you"), and even narration by inanimate objects or abstract concepts. Each innovation expands the possibilities of storytelling and challenges our expectations as readers.</p>
+                        <div class="page-number page-number-left">2</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-2"></div>
+            </div>
+            
+            <div class="page" id="page-3" style="z-index: 12;">
+                <div class="page-content">
+                    <h2>Chapter Two: Setting and Atmosphere</h2>
+                    <p><span class="dropcap">T</span>he world in which a story unfolds is far more than mere backdrop; it is an essential element that shapes characters, influences events, and establishes the emotional tone of the narrative. From the fog-shrouded streets of Dickens's London to the sun-baked plains of Cormac McCarthy's American Southwest, setting functions as a character in its own right.</p>
+                    <p>A masterful description of place engages all the senses, allowing readers to see, hear, smell, taste, and feel the environment. Consider how Gabriel García Márquez transforms the fictional town of Macondo into a place so vivid that readers feel they could navigate its streets from memory.</p>
+                    <p>Setting also serves symbolic functions, reflecting the psychological states of characters or embodying thematic concerns. The decaying mansion in Poe's "The Fall of the House of Usher" mirrors the deteriorating mental state of its inhabitants, while the island in Golding's "Lord of the Flies" becomes a microcosm for examining human nature.</p>
+                    <div class="page-number page-number-right">3</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <p>Atmosphere, closely related to setting, refers to the emotional quality that pervades a work. It is created through careful selection of details, imagery, and language. The oppressive heat in Faulkner's "A Rose for Emily" contributes to the story's suffocating atmosphere, while the constant rain in Bladerunner's Los Angeles establishes a mood of melancholy and decay.</p>
+                        <p>Historical and cultural contexts also inform setting, anchoring fictional events within recognizable frameworks while allowing authors to comment on specific social conditions. The drawing rooms of Jane Austen's England reveal as much about class and gender dynamics as they do about interior decoration.</p>
+                        <p>In contemporary literature, settings increasingly transcend physical locations to include virtual spaces, alternate realities, and psychological landscapes, reflecting our changing understanding of place in an increasingly connected yet fragmented world.</p>
+                        <div class="page-number page-number-left">4</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-3"></div>
+            </div>
+            
+            <div class="page" id="page-4" style="z-index: 11;">
+                <div class="page-content">
+                    <h2>Chapter Three: Character Development</h2>
+                    <p><span class="dropcap">A</span>t the heart of most literary works lies the character—the fictional being whose desires, conflicts, and transformations drive the narrative forward. The most memorable characters in literature often feel more real to us than many people we encounter in our daily lives.</p>
+                    <p>Character development occurs through various techniques: direct description, dialogue, action, internal monologue, and the reactions of other characters. Consider how Jane Austen reveals Elizabeth Bennet's personality not only through her witty conversation but through her perceptive observations of those around her.</p>
+                    <p>Round characters, complex and capable of surprise, stand in contrast to flat characters, who may serve important functions but remain relatively simple and predictable. Dynamic characters undergo significant change, while static characters remain essentially the same throughout the narrative.</p>
+                    <div class="page-number page-number-right">5</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <p>The concept of the protagonist has evolved over time, from the unambiguous heroes of ancient epics to the anti-heroes and morally ambiguous figures of modern literature. Characters like Dostoevsky's Raskolnikov or Nabokov's Humbert Humbert challenge readers by eliciting sympathy despite their disturbing actions.</p>
+                        <p>Psychological depth became increasingly important in the development of the novel, with authors like Virginia Woolf and James Joyce pioneering techniques to represent consciousness on the page. The stream-of-consciousness approach allows readers direct access to a character's thoughts, however fragmentary or irrational.</p>
+                        <p>In contemporary literature, characters often reflect the fragmented nature of modern identity, existing in states of flux rather than as fixed entities. Authors like Zadie Smith create characters whose sense of self is shaped by intersecting cultural, racial, and social factors.</p>
+                        <div class="page-number page-number-left">6</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-4"></div>
+            </div>
+            
+            <div class="page" id="page-5" style="z-index: 10;">
+                <div class="page-content">
+                    <h2>Chapter Four: Symbolism and Imagery</h2>
+                    <p><span class="dropcap">S</span>ymbolism allows authors to communicate complex ideas through concrete objects, characters, or actions. When Yeats writes of a falcon that "cannot hear the falconer," the image becomes a powerful symbol for a world spinning out of control, disconnected from traditional sources of meaning and order.</p>
+                    <p>Literary symbols may be conventional, drawing on widely recognized associations (light representing knowledge, winter suggesting death), or they may be personal to an author's vision. Some symbols, like Melville's white whale, accumulate multiple, even contradictory meanings, resisting simple interpretation.</p>
+                    <p>Imagery appeals directly to the senses, making abstract concepts tangible and immediate. When Sylvia Plath describes the moon as "bald and wild," we not only visualize the lunar surface but feel something of its strange, inhuman energy.</p>
+                    <div class="page-number page-number-right">7</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <p>Patterns of imagery create thematic resonance throughout a text. In Toni Morrison's "Beloved," water imagery connects to themes of memory, rebirth, and the Middle Passage, gaining power through repetition and variation.</p>
+                        <p>Metaphor and simile, comparing unlike things to reveal unexpected similarities, represent perhaps the most fundamental tools for creating imagery. When Shakespeare's Romeo declares that "Juliet is the sun," he expresses not just her beauty but her centrality to his existence and her power to banish darkness.</p>
+                        <p>In modern and postmodern literature, symbolism often becomes self-conscious and ironic, acknowledging the arbitrary nature of symbolic systems while still employing them to create meaning. Authors like Thomas Pynchon create elaborate symbolic structures only to undermine them, reflecting a world where traditional systems of meaning have become suspect.</p>
+                        <div class="page-number page-number-left">8</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-5"></div>
+            </div>
+            
+            <div class="page" id="page-6" style="z-index: 9;">
+                <div class="page-content">
+                    <h2>Chapter Five: Theme and Meaning</h2>
+                    <p><span class="dropcap">T</span>heme represents the central idea or insight about life that a literary work explores. Unlike a moral or message, which can often be reduced to a simple statement, a theme is typically complex and open to interpretation, inviting readers to engage actively with the text.</p>
+                    <p>Great literature rarely offers simplistic answers to the questions it raises. Instead, it presents the complexity of human experience in all its contradictions and ambiguities. Consider how Shakespeare's tragedies resist reduction to moral lessons, instead exploring the full range of human possibility—both glorious and terrible.</p>
+                    <p>Some themes appear consistently throughout literary history: love and death, the individual versus society, the search for meaning, the nature of good and evil. Yet each work approaches these universal concerns from a unique perspective, reflecting both personal vision and cultural context.</p>
+                    <div class="page-number page-number-right">9</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <p>The relationship between form and theme is often intimate; how something is told relates directly to what is being told. The fragmented structure of T.S. Eliot's "The Waste Land" embodies its theme of cultural disintegration, while the circular narrative of Joyce's "Finnegans Wake" reflects its cyclical view of history.</p>
+                        <p>Contemporary approaches to literary meaning often acknowledge the role of the reader in creating significance. Rather than seeing meaning as fixed within the text, waiting to be discovered, reader-response theory suggests that meaning emerges through the interaction between text and reader, influenced by personal experience and cultural context.</p>
+                        <p>This view doesn't imply that all interpretations are equally valid—the text itself provides constraints—but it recognizes that literature remains vital precisely because it continues to generate new meanings as it encounters new readers in new circumstances.</p>
+                        <div class="page-number page-number-left">10</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-6"></div>
+            </div>
+            
+            <div class="page" id="page-7" style="z-index: 8;">
+                <div class="page-content">
+                    <h2>Epilogue: The Future of Literature</h2>
+                    <p><span class="dropcap">A</span>s we look toward the horizon of literary development, we find ourselves at a moment of extraordinary possibility and uncertainty. Digital technologies have transformed how texts are created, distributed, and consumed, while globalization has brought diverse literary traditions into closer dialogue than ever before.</p>
+                    <p>New forms emerge that challenge traditional boundaries: interactive narratives that give readers agency in shaping the story, collaborative works created by multiple authors, texts that incorporate visual and auditory elements to create multimedia experiences. These innovations don't replace traditional forms but expand the territory of what literature can be and do.</p>
+                    <p>Yet amid this rapid evolution, the fundamental human need for stories remains constant. We continue to seek in literature what we have always sought: insight into ourselves and others, connection across difference, beauty that moves us, truth that transforms us.</p>
+                    <div class="page-number page-number-right">11</div>
+                </div>
+                <div class="page-edge"></div>
+                <div class="page-back">
+                    <div class="page-content">
+                        <p>The greatest works of literature, regardless of when or where they were created, speak to something essential in human experience. They may be products of particular times and places, but they transcend those limitations to address readers across centuries and continents.</p>
+                        <p>As readers and writers, we participate in an ongoing conversation that stretches back to the earliest recorded stories and extends forward into futures we cannot yet imagine. Each new work responds to what came before while opening possibilities for what might come after.</p>
+                        <p>In this sense, literature is never finished, never complete. It lives in the minds of readers, in the hands of writers, in the spaces between us where meaning is made and shared. It is, and will remain, one of humanity's most profound achievements and most necessary arts.</p>
+                        <div class="page-number page-number-left">12</div>
+                    </div>
+                </div>
+                <div class="page-turn-hint" id="hint-7"></div>
+            </div>
+            
+            <!-- Back Cover -->
+            <div class="book-cover back-cover">
+                <div class="cover-content">
+                    <p style="font-style: italic; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.8;">
+                        "A masterful exploration of literary art that illuminates both classic and contemporary works with equal brilliance. Blackwood's insights will transform how you read forever."<br><br>
+                        — The Literary Review
+                    </p>
+                </div>
+                <div class="light-glare"></div>
+            </div>
+        </div>
+        
+        <div class="book-shadow" id="book-shadow"></div>
+    </div>
+</div>
+
+<div class="controls">
+    <button class="control-btn" id="open-btn">Open Book</button>
+    <button class="control-btn" id="prev-btn" disabled>Previous Page</button>
+    <button class="control-btn" id="next-btn" disabled>Next Page</button>
+</div>
+
+<script>
+    // DOM Elements
+    const book = document.getElementById('book');
+    const bookContainer = document.getElementById('book-container');
+    const frontCover = document.getElementById('front-cover');
+    const bookShadow = document.getElementById('book-shadow');
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const openBtn = document.getElementById('open-btn');
+    const statusIndicator = document.getElementById('status-indicator');
+    
+    // State variables
+    let isBookOpen = false;
+    let currentPage = -1;
+    let isAnimating = false;
+    
+    // Initialize book
+    function initBook() {
+        // Set initial page positions
+        pages.forEach((page, index) => {
+            page.style.transform = 'rotateY(0deg)';
+            page.style.zIndex = pages.length - index + 10;
+            page.dataset.index = index;
+            page.dataset.currentRotation = 0;
+        });
+        
+        // Set initial button states
+        updateControls();
+    }
+    
+    // Show status message
+    function showStatus(message) {
+        statusIndicator.textContent = message;
+        statusIndicator.style.opacity = 1;
+        
+        setTimeout(() => {
+            statusIndicator.style.opacity = 0;
+        }, 1500);
+    }
+    
+    // Toggle book open/closed
+    function toggleBook() {
+        if (isAnimating) return;
+        isAnimating = true;
+        
+        if (!isBookOpen) {
+            // Open the book
+            frontCover.style.transform = 'rotateY(-150deg)';
+            bookContainer.style.transform = 'rotateY(30deg)';
+            bookShadow.style.width = '120%';
+            openBtn.textContent = 'Close Book';
+            isBookOpen = true;
+            currentPage = -1;
+            showStatus('Book opened');
+            
+            // Enable next button
+            setTimeout(() => {
+                nextBtn.disabled = false;
+                isAnimating = false;
+            }, 1200);
+        } else {
+            // Close the book
+            // First, turn all pages back
+            let delay = 0;
+            
+            if (currentPage >= 0) {
+                for (let i = currentPage; i >= 0; i--) {
+                    setTimeout(() => {
+                        pages[i].style.transform = 'rotateY(0deg)';
+                        pages[i].dataset.currentRotation = 0;
+                    }, delay);
+                    delay += 150;
+                }
+            }
+            
+            // Then close the cover
+            setTimeout(() => {
+                frontCover.style.transform = 'rotateY(0deg)';
+                bookContainer.style.transform = 'rotateY(0deg)';
+                bookShadow.style.width = '100%';
+                openBtn.textContent = 'Open Book';
+                isBookOpen = false;
+                currentPage = -1;
+                showStatus('Book closed');
+                updateControls();
+                isAnimating = false;
+            }, delay + 300);
+        }
+        
+        updateControls();
+    }
+    
+    // Turn to next page
+    function nextPage() {
+        if (isAnimating || currentPage >= pages.length - 1) return;
+        isAnimating = true;
+        
+        currentPage++;
+        const page = pages[currentPage];
+        
+        // Turn the page with a slight perspective
+        page.style.transform = 'rotateY(-175deg)';
+        page.dataset.currentRotation = -175;
+        
+        // Add a slight tilt to the book container
+        bookContainer.style.transform = 'rotateY(15deg)';
+        
+        showStatus(`Page ${currentPage + 1}`);
+        
+        // Update controls after animation
+        setTimeout(() => {
+            updateControls();
+            isAnimating = false;
+            
+            // Show hint for next page
+            if (currentPage < pages.length - 1) {
+                const nextHint = document.getElementById(`hint-${currentPage + 2}`);
+                if (nextHint) {
+                    nextHint.style.opacity = 1;
+                    setTimeout(() => {
+                        nextHint.style.opacity = 0;
+                    }, 2000);
+                }
+            }
+        }, 600);
+    }
+    
+    // Turn to previous page
+    function prevPage() {
+        if (isAnimating || currentPage < 0) return;
+        isAnimating = true;
+        
+        const page = pages[currentPage];
+        
+        // Turn the page back with a slight perspective
+        page.style.transform = 'rotateY(0deg)';
+        page.dataset.currentRotation = 0;
+        
+        // Add a slight tilt to the book container
+        bookContainer.style.transform = 'rotateY(45deg)';
+        
+        currentPage--;
+        
+        if (currentPage >= 0) {
+            showStatus(`Page ${currentPage + 1}`);
+        } else {
+            showStatus('Back to cover');
+        }
+        
+        // Update controls and reset book container position
+        setTimeout(() => {
+            updateControls();
+            isAnimating = false;
+            bookContainer.style.transform = 'rotateY(30deg)';
+        }, 600);
+    }
+    
+    // Update control buttons state
+    function updateControls() {
+        if (!isBookOpen) {
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+        }
+        
+        prevBtn.disabled = currentPage < 0;
+        nextBtn.disabled = currentPage >= pages.length - 1;
+    }
+    
+    // Add 3D effect on mousemove
+    function handle3DEffect(e) {
+        if (!isBookOpen || isAnimating) return;
+        
+        const xPos = (window.innerWidth / 2 - e.pageX) / 40;
+        const yPos = (window.innerHeight / 2 - e.pageY) / 40;
+        
+        bookContainer.style.transform = `rotateY(${xPos}deg) rotateX(${-yPos}deg)`;
+    }
+    
+    // Reset 3D effect
+    function reset3DEffect() {
+        bookContainer.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    }
+    
+    // Add ambient light effect
+    function updateAmbientLight(e) {
+        if (!isBookOpen) return;
+        
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        document.querySelectorAll('.light-glare').forEach(glare => {
+            glare.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%)`;
+        });
+    }
+    
+    // Add responsive adjustments
+    function adjustForScreenSize() {
+        if (window.innerWidth < 768) {
+            document.documentElement.style.setProperty('--book-width', '300px');
+            document.documentElement.style.setProperty('--book-height', '450px');
+        } else {
+            document.documentElement.style.setProperty('--book-width', '400px');
+            document.documentElement.style.setProperty('--book-height', '600px');
+        }
+    }
+    
+    // Event listeners
+    openBtn.addEventListener('click', toggleBook);
+    prevBtn.addEventListener('click', prevPage);
+    nextBtn.addEventListener('click', nextPage);
+    document.addEventListener('mousemove', handle3DEffect);
+    document.addEventListener('mouseleave', reset3DEffect);
+    document.addEventListener('mousemove', updateAmbientLight);
+    window.addEventListener('resize', adjustForScreenSize);
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            if (isBookOpen) {
+                nextPage();
+            } else {
+                toggleBook();
+            }
+        } else if (e.key === 'ArrowLeft') {
+            prevBtn.click();
+        } else if (e.key === 'Escape') {
+            if (isBookOpen) {
+                toggleBook();
+            }
+        }
+    });
+    
+    // Initialize
+    initBook();
+    adjustForScreenSize();
+    
+    // Add page curl effect on hover
+    pages.forEach(page => {
+        page.addEventListener('mouseenter', () => {
+            if (!isAnimating && parseInt(page.dataset.index) === currentPage + 1) {
+                page.style.transform = 'rotateY(-15deg)';
+            }
+        });
+        
+        page.addEventListener('mouseleave', () => {
+            if (!isAnimating && parseInt(page.dataset.index) === currentPage + 1) {
+                page.style.transform = 'rotateY(0deg)';
+            }
+        });
+    });
+</script>
+</body>
+</html>
