@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Personal Portfolio Template</title>
+    
+    <!-- Resource Hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="description" content="Professional portfolio showcasing web development, UI/UX design, and data analysis skills.">
+    <meta name="theme-color" content="#0e1630">
+    <!-- Critical CSS inline -->
+    <style>
+        /* Critical CSS for above-the-fold content */
+        :root{--primary-color:#2196F3;--secondary-color:#673AB7;--dark-color:#0e1630;--light-color:#f4f7fc;--text-color:#6c757d;--white-color:#fff;--dark-blue:#1a237e;--box-shadow:0 5px 20px rgba(0,0,0,0.1)}
+        body{font-family:'Poppins',sans-serif;margin:0;padding:0;background-color:var(--dark-color);color:var(--light-color);overflow-x:hidden}
+        .container{width:100%;max-width:1200px;margin:0 auto;padding:0 15px}
+        .header{position:fixed;top:0;left:0;width:100%;z-index:1000;background-color:rgba(14,22,48,0.95);backdrop-filter:blur(10px);transition:all .3s ease}
+        .hero-section{padding:180px 0 100px;position:relative;overflow:hidden}
+        .hero-content{display:flex;align-items:center;justify-content:space-between}
+        .hero-text{flex:0 0 50%}
+        .hero-image{flex:0 0 45%}
+        .hero-image img{max-width:100%;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+        h1,h2,h3{margin:0}
+        .preloader{position:fixed;top:0;left:0;width:100%;height:100%;background-color:var(--dark-color);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column}
+        .preloader.hidden{opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s ease}
+    </style>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"></noscript>
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></noscript>
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}"></noscript>
+    
+    <!-- Font Awesome Icons - Deferred -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></noscript>
+    
+    <!-- Animate.css for animations - Deferred -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></noscript>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo"></div>
+            <div class="preloader-bar">
+                <div class="preloader-progress" id="preloaderProgress"></div>
+            </div>
+            <div class="preloader-text">LOADING</div>
+        </div>
+    </div>
+    
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- Floating Navigation Indicator -->
+    <div class="nav-indicator" id="navIndicator">
+        <a href="#home" class="nav-dot active" data-section="home">
+            <span class="nav-tooltip">Home</span>
+        </a>
+        <a href="#about" class="nav-dot" data-section="about">
+            <span class="nav-tooltip">About</span>
+        </a>
+        <a href="#services" class="nav-dot" data-section="services">
+            <span class="nav-tooltip">Services</span>
+        </a>
+        <a href="#portfolio" class="nav-dot" data-section="portfolio">
+            <span class="nav-tooltip">Portfolio</span>
+        </a>
+        <a href="#resume" class="nav-dot" data-section="resume">
+            <span class="nav-tooltip">Resume</span>
+        </a>
+        <a href="#contact" class="nav-dot" data-section="contact">
+            <span class="nav-tooltip">Contact</span>
+        </a>
+    </div>
+    
+    <!-- Particles Background -->
+    <div class="particles-container" id="particles-js"></div>
+    
+    <!-- Header Section Start -->
+    <header id="header" class="animate__animated animate__fadeIn">
+        <div class="container">
+            <div class="header-wrapper">
+                <div class="logo">
+                    <a href="index.html"><span class="logo-icon">⬜</span> VirTuo</a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#home" class="active">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#resume">Resume</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                </div>
+                <div class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Hero Section Start -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text" data-aos="fade-right" data-aos-duration="1000">
+                    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">HELLO</h1>
+                    <h2 class="hero-name animate__animated animate__fadeInUp animate__delay-1s">I'm Shubham Raj</h2>
+                    <h3 class="hero-title animate__animated animate__fadeInUp animate__delay-2s">A <span class="typing-text">Web Developer</span></h3>
+                    <p class="animate__animated animate__fadeInUp animate__delay-2s">I design and develop services for customers of all sizes, specializing in creating stylish, modern websites, web services and online stores.</p>
+                    <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-3s">
+                        <a href="#contact" class="btn primary-btn">Hire Me</a>
+                        <a href="#portfolio" class="btn secondary-btn">View Portfolio</a>
+                    </div>
+                </div>
+                <div class="hero-image" data-aos="fade-left" data-aos-duration="1000">
+                    <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="Hero Image" class="animate__animated animate__zoomIn animate__delay-1s" loading="eager" fetchpriority="high" width="500" height="600">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- Stats Section Start -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-wrapper" data-aos="fade-up" data-aos-duration="800">
+                <div class="stat-item">
+                    <h3></h3>
+                    <p>Years of Experience</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Python Projects</h3>
+                    <p>60+ Projects</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Web Development</h3>
+                    <p>5+ Projects</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Augmented Reality</h3>
+                    <p>4 Projects</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Stats Section End -->
+
+    <!-- About Section Start -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-wrapper">
+                <div class="about-left" data-aos="fade-up-right" data-aos-duration="1000">
+                    <div class="experience-card animate__animated animate__fadeIn animate__delay-1s">
+                        <h2 class="experience-number" id="experienceCounter">10<span class="plus">+</span></h2>
+                        <h3 class="experience-title">Years Of<br>Experience</h3>
+                    </div>
+                    <div class="expertise-card animate__animated animate__fadeIn animate__delay-1s">
+                        <h3 class="expertise-title">UI/UX Design</h3>
+                        <p class="expertise-count" id="projectCounter">241 Projects</p>
+                    </div>
+                </div>
+                
+                <div class="about-right" data-aos="fade-up-left" data-aos-duration="1000">
+                    <div class="about-header animate__animated animate__fadeIn animate__delay-1s">
+                        <span class="about-label">ABOUT ME</span>
+                        <h2 class="about-title">Boost Business Strategic<br>Solutions with Us</h2>
+                    </div>
+                    
+                    <p class="about-description animate__animated animate__fadeIn animate__delay-1s">Business consulting consultants provide expert advice and guide businesses to help them improve their performance, efficiency, and organizational effectiveness.</p>
+                    
+                    <div class="about-features">
+                        <div class="feature-card animate__animated animate__fadeInUp animate__delay-1s" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="500">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Business</h3>
+                                <p>Each one showcases my approach</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card animate__animated animate__fadeInUp animate__delay-1s" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="500">
+                            <div class="feature-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Partners</h3>
+                                <p>Business consulting consul us to a provide</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-cta animate__animated animate__fadeIn animate__delay-2s">
+                        <a href="#about" class="btn read-more-btn">Read More About Me <i class="fas fa-arrow-down"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- About Section End -->
+
+    <!-- Skills Section Start -->
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>My Skills</h2>
+                <p>Technical expertise and proficiency</p>
+            </div>
+            
+            <div class="skills-container" data-aos="fade-up" data-aos-delay="200">
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <h4>Web Development</h4>
+                        <span>92%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="92"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <h4>UI/UX Design</h4>
+                        <span>85%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="85"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <h4>JavaScript</h4>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="90"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <h4>React</h4>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="80"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <h4>Node.js</h4>
+                        <span>75%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="75"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Skills Section End -->
+
+    <!-- Services Section Start -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>My Services</h2>
+                <p>What I offer to my clients</p>
+            </div>
+            <div class="services-wrapper" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>UI/UX Design</h3>
+                    <p>Creating intuitive and visually appealing user interfaces and experiences that engage and delight users.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Building responsive and performant websites and web applications using modern technologies.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile App Development</h3>
+                    <p>Developing high-quality mobile applications for iOS and Android platforms.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Digital Marketing</h3>
+                    <p>Implementing effective digital marketing strategies to boost online presence and engagement.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>SEO Optimization</h3>
+                    <p>Optimizing websites for search engines to improve visibility and drive organic traffic.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-pen"></i>
+                    </div>
+                    <h3>Content Writing</h3>
+                    <p>Creating engaging and SEO-friendly content that resonates with your target audience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Services Section End -->
+
+    <!-- Portfolio Section Start -->
+    <section id="portfolio" class="portfolio-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>My Portfolio</h2>
+                <p>Transforming Ideas into Exceptional Results</p>
+            </div>
+            <div class="portfolio-filter" data-aos="fade-up" data-aos-delay="200">
+                <ul>
+                    <li class="active" data-filter="all">All</li>
+                    <li data-filter="design">Design</li>
+                    <li data-filter="branding">Branding</li>
+                    <li data-filter="development">Development</li>
+                    <li data-filter="marketing">Marketing</li>
+                </ul>
+            </div>
+            <div class="portfolio-grid" data-aos="fade-up" data-aos-delay="400">
+                <div class="portfolio-item" data-category="design development">
+                    <div class="portfolio-image">
+                        <img src="images/portfolio-1.jpg" alt="Portfolio Item 1">
+                        <div class="portfolio-overlay">
+                            <h3>SAAS Website</h3>
+                            <p>UI/UX Design, Development</p>
+                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="branding">
+                    <div class="portfolio-image">
+                        <img src="images/portfolio-2.jpg" alt="Portfolio Item 2">
+                        <div class="portfolio-overlay">
+                            <h3>Workout App</h3>
+                            <p>Branding, Mobile App</p>
+                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="development">
+                    <div class="portfolio-image">
+                        <img src="images/portfolio-3.jpg" alt="Portfolio Item 3">
+                        <div class="portfolio-overlay">
+                            <h3>Business Analytics</h3>
+                            <p>Web Development</p>
+                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="design marketing">
+                    <div class="portfolio-image">
+                        <img src="images/portfolio-4.jpg" alt="Portfolio Item 4">
+                        <div class="portfolio-overlay">
+                            <h3>Dashboard Design</h3>
+                            <p>UI/UX Design, Marketing</p>
+                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="branding development">
+                    <div class="portfolio-image">
+                        <img src="images/portfolio-5.jpg" alt="Portfolio Item 5">
+                        <div class="portfolio-overlay">
+                            <h3>Chatbots & AI Support</h3>
+                            <p>Branding, Development</p>
+                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="marketing">
+                    <div class="portfolio-image">
+                        <img src="images/portfolio-6.jpg" alt="Portfolio Item 6">
+                        <div class="portfolio-overlay">
+                            <h3>Content Marketing</h3>
+                            <p>Digital Marketing</p>
+                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Portfolio Section End -->
+
+    <!-- Resume Section Start -->
+    <section id="resume" class="resume-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>My Resume</h2>
+                <p>Empowering Creativity Through Experience</p>
+            </div>
+            
+            <div class="timeline-wrapper" data-aos="fade-up" data-aos-delay="200">
+                <div class="timeline-progress">
+                    <div class="timeline-progress-bar" id="timelineProgressBar"></div>
+                </div>
+                
+                <div class="timeline">
+                    <!-- Experience Timeline -->
+                    <div class="timeline-block" data-aos="fade-right">
+                        <div class="timeline-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2020 - Present</span>
+                            <h3>Senior UI/UX Designer</h3>
+                            <h4>Google Inc.</h4>
+                            <p>Leading UI/UX design for various web and mobile projects, collaborating with cross-functional teams to deliver exceptional user experiences.</p>
+                            <div class="timeline-skills">
+                                <span>UI/UX</span>
+                                <span>Figma</span>
+                                <span>Design Systems</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-block" data-aos="fade-left">
+                        <div class="timeline-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2017 - 2020</span>
+                            <h3>Master in Computer Science</h3>
+                            <h4>Stanford University</h4>
+                            <p>Specialized in UI/UX design and web development with a focus on user-centered design principles and advanced interaction patterns.</p>
+                            <div class="timeline-skills">
+                                <span>HCI</span>
+                                <span>Research</span>
+                                <span>Design Thinking</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-block" data-aos="fade-right">
+                        <div class="timeline-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2017 - 2020</span>
+                            <h3>UI/UX Designer</h3>
+                            <h4>Soft Tech</h4>
+                            <p>Designed user interfaces for web and mobile applications, conducted user research and usability testing to optimize user flows and experiences.</p>
+                            <div class="timeline-skills">
+                                <span>Sketch</span>
+                                <span>Prototyping</span>
+                                <span>User Testing</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-block" data-aos="fade-left">
+                        <div class="timeline-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2014 - 2016</span>
+                            <h3>Bachelor in Computer Science</h3>
+                            <h4>MIT University</h4>
+                            <p>Focused on software engineering and web technologies, graduated with honors and received recognition for innovative projects.</p>
+                            <div class="timeline-skills">
+                                <span>Programming</span>
+                                <span>Algorithms</span>
+                                <span>Web Dev</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-block" data-aos="fade-right">
+                        <div class="timeline-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2014 - 2017</span>
+                            <h3>App Developer</h3>
+                            <h4>ModernTech</h4>
+                            <p>Developed mobile applications for iOS and Android platforms using React Native and other technologies, focusing on performance and user experience.</p>
+                            <div class="timeline-skills">
+                                <span>React Native</span>
+                                <span>JavaScript</span>
+                                <span>Mobile Dev</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-block" data-aos="fade-left">
+                        <div class="timeline-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2010 - 2014</span>
+                            <h3>Diploma in Web Design</h3>
+                            <h4>Design Academy</h4>
+                            <p>Learned fundamental principles of web design, UI/UX, and digital marketing, building a strong foundation for future specialization.</p>
+                            <div class="timeline-skills">
+                                <span>HTML/CSS</span>
+                                <span>Design</span>
+                                <span>UX Basics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+    <!-- Resume Section End -->
+
+    <!-- Pricing Section Start --> 
+    <!-- <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>My Pricing</h2>
+                <p>Enhancing Collaboration Through Transparent Pricing</p>
+            </div>
+            <div class="pricing-wrapper" data-aos="fade-up" data-aos-delay="200">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Basic Plan</h3>
+                        <div class="price">$5.00</div>
+                        <span>Per Hour</span>
+                    </div>
+                    <div class="pricing-body">
+                        <ul>
+                            <li><i class="fas fa-check"></i> UI/UX Design</li>
+                            <li><i class="fas fa-check"></i> Web Development</li>
+                            <li><i class="fas fa-check"></i> Responsive Design</li>
+                            <li class="disabled"><i class="fas fa-times"></i> Mobile App Development</li>
+                            <li class="disabled"><i class="fas fa-times"></i> SEO Optimization</li>
+                            <li class="disabled"><i class="fas fa-times"></i> Content Writing</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="#contact" class="btn primary-btn">Get Started</a>
+                    </div>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3>Standard Plan</h3>
+                        <div class="price">$45.00</div>
+                        <span>Per Hour</span>
+                    </div>
+                    <div class="pricing-body">
+                        <ul>
+                            <li><i class="fas fa-check"></i> UI/UX Design</li>
+                            <li><i class="fas fa-check"></i> Web Development</li>
+                            <li><i class="fas fa-check"></i> Responsive Design</li>
+                            <li><i class="fas fa-check"></i> Mobile App Development</li>
+                            <li><i class="fas fa-check"></i> SEO Optimization</li>
+                            <li class="disabled"><i class="fas fa-times"></i> Content Writing</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="#contact" class="btn primary-btn">Get Started</a>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Premium Plan</h3>
+                        <div class="price">$230.00</div>
+                        <span>Per Hour</span>
+                    </div>
+                    <div class="pricing-body">
+                        <ul>
+                            <li><i class="fas fa-check"></i> UI/UX Design</li>
+                            <li><i class="fas fa-check"></i> Web Development</li>
+                            <li><i class="fas fa-check"></i> Responsive Design</li>
+                            <li><i class="fas fa-check"></i> Mobile App Development</li>
+                            <li><i class="fas fa-check"></i> SEO Optimization</li>
+                            <li><i class="fas fa-check"></i> Content Writing</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="#contact" class="btn primary-btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+     Pricing Section End
+
+    Blog Section Start -->
+   <!-- <section id="blog" class="blog-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>My Blog</h2>
+                <p>Insights & Thoughts on Digital Craftsmanship</p>
+            </div>
+            <div class="blog-grid" data-aos="fade-up" data-aos-delay="200">
+                <div class="blog-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="blog-image">
+                        <img src="images/blog-1.jpg" alt="Blog Image 1">
+                        <div class="blog-category">Development</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">
+                            <i class="far fa-calendar-alt"></i> June 1, 2025
+                        </div>
+                        <h3 class="blog-title"><a href="blog.html">Building the Future with Software Engineering</a></h3>
+                        <p class="blog-excerpt">Explore the latest trends and innovations in software engineering and how they're shaping our digital future.</p>
+                        <div class="blog-footer">
+                            <div class="blog-author">
+                                <img src="images/author-profile.jpg" alt="Author">
+                                <span>John Doe</span>
+                            </div>
+                            <a href="blog.html" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="blog-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="blog-image">
+                        <img src="images/blog-2.jpg" alt="Blog Image 2">
+                        <div class="blog-category">UI/UX Design</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">
+                            <i class="far fa-calendar-alt"></i> May 25, 2025
+                        </div>
+                        <h3 class="blog-title"><a href="blog.html">Latest Insights in Modern UI Design Trends</a></h3>
+                        <p class="blog-excerpt">Discover the cutting-edge techniques and methodologies that are revolutionizing the UI/UX design landscape.</p>
+                        <div class="blog-footer">
+                            <div class="blog-author">
+                                <img src="images/author-profile.jpg" alt="Author">
+                                <span>John Doe</span>
+                            </div>
+                            <a href="blog.html" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="blog-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="blog-image">
+                        <img src="images/blog-3.jpg" alt="Blog Image 3">
+                        <div class="blog-category">Digital Marketing</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">
+                            <i class="far fa-calendar-alt"></i> May 15, 2025
+                        </div>
+                        <h3 class="blog-title"><a href="blog.html">The Future of Digital Marketing in 2025</a></h3>
+                        <p class="blog-excerpt">Learn about the exciting new trends in digital marketing and what they mean for businesses in the coming years.</p>
+                        <div class="blog-footer">
+                            <div class="blog-author">
+                                <img src="images/author-profile.jpg" alt="Author">
+                                <span>John Doe</span>
+                            </div>
+                            <a href="blog.html" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="400" style="margin-top: 40px;">
+                <a href="blog.html" class="btn primary-btn">View All Posts</a>
+            </div>
+        </div>
+    </section> 
+    Blog Section End -->
+
+    <!-- Contact Section Start -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Contact Me</h2>
+                <p>Get in Touch for Collaboration</p>
+            </div>
+            <div class="contact-wrapper" data-aos="fade-up" data-aos-delay="200">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Address</h3>
+                            <p>123 Design Street, San Francisco, CA 94107</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Phone</h3>
+                            <p>+1 (123) 456-7890</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Email</h3>
+                            <p>info@yourportfolio.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Website</h3>
+                            <p>www.yourportfolio.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Your Name" required>
+                            <label for="name" class="form-label">Your Name</label>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Your Email" required>
+                            <label for="email" class="form-label">Your Email</label>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" placeholder="Subject" required>
+                            <label for="subject" class="form-label">Subject</label>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
+                            <label for="message" class="form-label">Your Message</label>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-button">
+                            <button type="submit" class="btn primary-btn">Send Message <i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </form>
+                    <div class="form-success-message" id="formSuccess">
+                        <div class="success-content">
+                            <div class="success-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3>Message Sent Successfully!</h3>
+                            <p>I'll get back to you as soon as possible.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Section End -->
+
+    <!-- Footer Section Start -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">Portfolio</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+                <div class="footer-menu">
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#resume">Resume</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Portfolio. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Remove duplicate jQuery -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Typed.js for text animation -->
+    <script src="{{ url_for('static', filename='js/typed.min.js') }}"></script>
+    <script src="https://unpkg.com/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Main JS - load last -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

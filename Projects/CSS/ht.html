@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Animation - PhotoGenic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Modern Pro AI Animation UI */
+        :root {
+            --primary: #0073e6;
+            --primary-light: #e6f4ff;
+            --primary-dark: #0050a0;
+            --secondary: #34a853;
+            --accent: #fbbc05;
+            --danger: #ea4335;
+            --dark: #202124;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --font-main: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* === Header Styling === */
+        .header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            padding: 0.5rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            color: var(--primary);
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+
+        /* === Nav Links === */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+        }
+
+        /* === Content Area === */
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* === Animation Header === */
+        .anim-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .anim-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+
+        .anim-title span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .anim-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Button Styling */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* Animation Container */
+        .anim-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+
+        /* Animation Interface */
+        .anim-interface {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        @media (max-width: 992px) {
+            .anim-interface {
+                flex-direction: column;
+            }
+        }
+
+        .anim-sidebar {
+            flex: 0 0 300px;
+        }
+
+        .anim-preview {
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* Upload Section */
+        .anim-upload-section, 
+        .anim-options-section,
+        .anim-text-section {
+            background-color: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--gray-400);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            background-color: white;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .upload-area:hover,
+        .upload-area.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .upload-placeholder i {
+            font-size: 3rem;
+            color: var(--primary);
+        }
+
+        .upload-preview {
+            text-align: center;
+        }
+
+        .upload-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .remove-image-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        .remove-image-btn:hover {
+            background-color: #c62828;
+        }
+
+        /* Animation Options */
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .option-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+
+        .option-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .option-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .option-card.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        /* Range Controls */
+        .range-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--gray-300);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .range-value {
+            width: 30px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            cursor: pointer;
+        }
+
+        /* Button Block */
+        .btn-block {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        /* Animation Player */
+        .animation-player {
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .player-header {
+            padding: 1rem;
+            background-color: var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .control-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .player-canvas {
+            aspect-ratio: 16/9;
+            background-color: var(--gray-800);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animation-stage {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+        }
+
+        .placeholder-message {
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .placeholder-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .action-buttons {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Animation Examples */
+        .anim-examples {
+            margin-top: 3rem;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .example-card {
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .example-preview {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+        }
+
+        .example-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .example-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--primary);
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .example-card:hover .example-play-btn {
+            opacity: 1;
+        }
+
+        .example-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .example-info {
+            padding: 1rem;
+        }
+
+        .example-info h4 {
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .example-info p {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 350px;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--secondary);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-success .toast-icon {
+            color: var(--secondary);
+        }
+
+        .toast-error .toast-icon {
+            color: var(--danger);
+        }
+
+        .toast-info .toast-icon {
+            color: var(--primary);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .toast-close {
+            color: var(--gray-500);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            line-height: 1;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Loading Spinner */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 250px;
+            height: 6px;
+            background-color: var(--gray-200);
+            border-radius: 3px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: progressAnimation 2s ease infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Text Animation Section */
+        .anim-text-section {
+            background-color: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .anim-text-section textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.7rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-300);
+            resize: vertical;
+            font-family: var(--font-main);
+        }
+
+        .text-animation-element {
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Text animations */
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blinkCursor {
+            from { border-right-color: var(--primary); }
+            to { border-right-color: transparent; }
+        }
+
+        .text-typewriter {
+            overflow: hidden;
+            border-right: 2px solid var(--primary);
+            animation: typewriter 4s steps(40) 1s 1 normal both, blinkCursor 500ms steps(40) infinite normal;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .text-fade { animation: fadeInOut 4s ease-in-out infinite; }
+
+        @keyframes slideLR {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+        .text-slide { animation: slideLR 6s linear infinite; }
+
+        @keyframes rotateText {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .text-rotate { animation: rotateText 8s linear infinite; }
+
+        /* Prompt-based Animation Section */
+        .anim-prompt-section {
+            background-color: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .mode-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .mode-tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+        }
+
+        .mode-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .prompt-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .prompt-container textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.7rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-300);
+            resize: vertical;
+            font-family: var(--font-main);
+        }
+
+        .api-key-container {
+            margin-top: 1rem;
+            border-top: 1px solid var(--gray-300);
+            padding-top: 1rem;
+        }
+
+        .api-key-container details {
+            cursor: pointer;
+        }
+
+        .api-key-container summary {
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-300);
+        }
+
+        .api-info {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            margin-top: 0.5rem;
+        }
+
+        .api-info-link {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .api-provider {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .generation-progress {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .generation-progress.active {
+            display: block;
+        }
+
+        .generation-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .step-status {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--gray-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        .step-status.complete {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .step-status.in-progress {
+            background-color: var(--primary);
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .animation-caption {
+            text-align: center;
+            margin-top: 1rem;
+            color: white;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pro Header with Modern UI -->
+    <header class="header">
+        <a href="/" class="logo">
+            <i class="fas fa-camera"></i>
+            <span>PhotoGenic</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="/ai-features" class="nav-link"><i class="fas fa-magic"></i> AI Features</a>
+            <a href="/collections" class="nav-link"><i class="fas fa-images"></i> Collections</a>
+        </nav>
+    </header>
+
+    <main class="content">
+        <div class="anim-header">
+            <h1 class="anim-title">AI <span>Animation</span></h1>
+            <p class="anim-subtitle">Bring your photos to life with AI-powered animations, motion effects, and dynamic transitions.</p>
+        </div>
+
+        <!-- Animation Container with Upload and Interface -->
+        <div class="anim-container">
+            <div class="anim-interface">
+                <div class="anim-sidebar">
+                    <div class="anim-upload-section">
+                        <h3 class="section-title"><i class="fas fa-upload"></i> Upload Image</h3>
+                        <div class="upload-area" id="upload-area">
+                            <input type="file" id="image-upload" accept="image/*" hidden>
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag and drop your image here or</p>
+                                <button class="btn btn-outline" id="upload-btn">Select File</button>
+                            </div>
+                            <div class="upload-preview" id="upload-preview" style="display: none;">
+                                <img src="" alt="Uploaded image" id="preview-img">
+                                <button class="btn btn-outline remove-image-btn" id="remove-image-btn">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="anim-options-section">
+                        <h3 class="section-title"><i class="fas fa-sliders-h"></i> Animation Options</h3>
+
+                        <div class="option-group">
+                            <label class="option-label">Animation Type</label>
+                            <div class="option-cards" id="image-animation-types">
+                                <div class="option-card active" data-animation="zoom">
+                                    <div class="option-icon"><i class="fas fa-expand"></i></div>
+                                    <span>Zoom</span>
+                                </div>
+                                <div class="option-card" data-animation="float">
+                                    <div class="option-icon"><i class="fas fa-water"></i></div>
+                                    <span>Float</span>
+                                </div>
+                                <div class="option-card" data-animation="parallax">
+                                    <div class="option-icon"><i class="fas fa-layer-group"></i></div>
+                                    <span>Parallax</span>
+                                </div>
+                                <div class="option-card" data-animation="3d">
+                                    <div class="option-icon"><i class="fas fa-cube"></i></div>
+                                    <span>3D</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label class="option-label">Animation Speed</label>
+                            <div class="range-control">
+                                <input type="range" min="1" max="10" value="5" class="slider" id="speed-slider">
+                                <div class="range-value">
+                                    <span id="speed-value">5</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label class="option-label">Animation Duration (seconds)</label>
+                            <div class="range-control">
+                                <input type="range" min="1" max="10" value="3" class="slider" id="duration-slider">
+                                <div class="range-value">
+                                    <span id="duration-value">3</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label class="option-label">Effects</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="effect-blur"> Depth Blur
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="effect-particles"> Particles
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="effect-shadows"> Dynamic Shadows
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-block" id="generate-btn">
+                            <i class="fas fa-magic"></i> Generate Animation
+                        </button>
+                    </div>
+
+                    <!-- Text Animation Section -->
+                    <div class="anim-text-section">
+                        <h3 class="section-title"><i class="fas fa-font"></i> Text Animation</h3>
+                        <textarea id="text-input" placeholder="Enter your text here"></textarea>
+                        <label class="option-label" style="margin-top:1rem;">Text Animation Type</label>
+                        <div class="option-cards" id="text-animation-types">
+                            <div class="option-card active" data-animation="typewriter">
+                                <div class="option-icon"><i class="fas fa-keyboard"></i></div>
+                                <span>Typewriter</span>
+                            </div>
+                            <div class="option-card" data-animation="fade">
+                                <div class="option-icon"><i class="fas fa-eye"></i></div>
+                                <span>Fade</span>
+                            </div>
+                            <div class="option-card" data-animation="slide">
+                                <div class="option-icon"><i class="fas fa-arrows-alt-h"></i></div>
+                                <span>Slide</span>
+                            </div>
+                            <div class="option-card" data-animation="rotate">
+                                <div class="option-icon"><i class="fas fa-sync-alt"></i></div>
+                                <span>Rotate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prompt-based Animation Section -->
+                    <div class="anim-prompt-section">
+                        <h3 class="section-title"><i class="fas fa-font"></i> Prompt-based Animation</h3>
+                        <div class="mode-tabs">
+                            <div class="mode-tab active">Text</div>
+                            <div class="mode-tab">Image</div>
+                        </div>
+                        <div class="prompt-container">
+                            <textarea id="prompt-input" placeholder="Enter your prompt here"></textarea>
+                            <div class="api-key-container">
+                                <details>
+                                    <summary>API Key</summary>
+                                    <div class="form-group">
+                                        <input type="text" id="api-key" placeholder="Enter your API key">
+                                    </div>
+                                    <p class="api-info">Get your API key from <a href="#" class="api-info-link">here</a></p>
+                                </details>
+                            </div>
+                            <div class="api-provider">
+                                <div class="form-group">
+                                    <select id="api-provider">
+                                        <option value="stable-diffusion">Stable Diffusion</option>
+                                        <option value="dall-e">DALL-E</option>
+                                    </select>
+                                </div>
+                                <p class="api-info">Choose your preferred API provider</p>
+                            </div>
+                            <button class="btn btn-block" id="generate-prompt-btn">
+                                <i class="fas fa-magic"></i> Generate Animation
+                            </button>
+                            <div class="generation-progress" id="generation-progress">
+                                <div class="generation-step">
+                                    <div class="step-status"></div>
+                                    <span>Processing...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="anim-preview">
+                    <div class="animation-player">
+                        <div class="player-header">
+                            <h3><i class="fas fa-play-circle"></i> Animation Preview</h3>
+                            <div class="player-controls">
+                                <button class="control-btn" id="play-btn" title="Play">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="control-btn" id="pause-btn" title="Pause">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                                <button class="control-btn" id="reset-btn" title="Reset">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="player-canvas">
+                            <div class="animation-stage" id="animation-stage">
+                                <div class="placeholder-message">
+                                    <i class="fas fa-photo-video"></i>
+                                    <p>Upload an image and select options to preview your animation</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-outline" id="download-btn" disabled>
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="btn" id="share-btn" disabled>
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animation Examples -->
+        <div class="anim-examples">
+            <h2 class="section-title">Animation Examples</h2>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-preview">
+                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" alt="Landscape example">
+                        <div class="example-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="example-info">
+                        <h4>Parallax Landscape</h4>
+                        <p>Multi-layered landscape with depth effect</p>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" alt="Portrait example">
+                        <div class="example-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="example-info">
+                        <h4>3D Portrait</h4>
+                        <p>Dynamic 3D effect on portrait photo</p>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <img src="https://images.unsplash.com/photo-1494253109108-2e30c049369b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8N3x8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" alt="Nature example">
+                        <div class="example-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="example-info">
+                        <h4>Floating Elements</h4>
+                        <p>Animated objects with particle effects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-container" class="loading-container" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Generating your animation...</p>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Toast notification function
+
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                </div>
+                <div class="toast-content">
+                    <h4 class="toast-title">${title}</h4>
+                    <p class="toast-message">${message}</p>
+                </div>
+                <button class="toast-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            });
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Animation options initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            showToast('Welcome', 'Upload an image or enter a prompt to start creating AI animations!', 'info');
+            initializeUpload();
+            initializeAnimationOptions();
+            initializePromptGeneration();
+            initializeExamples();
+            
+            // Set up action buttons
+            document.getElementById('download-btn').addEventListener('click', simulateDownload);
+            document.getElementById('share-btn').addEventListener('click', showShareOptions);
+        });
+
+        // File Upload Functionality
+        function initializeUpload() {
+            const uploadArea = document.getElementById('upload-area');
+            const uploadBtn = document.getElementById('upload-btn');
+            const imageUpload = document.getElementById('image-upload');
+            const uploadPreview = document.getElementById('upload-preview');
+            const previewImg = document.getElementById('preview-img');
+            const removeImageBtn = document.getElementById('remove-image-btn');
+
+            // Trigger file input when clicking the upload button
+            uploadBtn.addEventListener('click', () => {
+                imageUpload.click();
+            });
+
+            // Handle file selection
+            imageUpload.addEventListener('change', (e) => {
+                handleFileSelect(e.target.files[0]);
+            });
+
+            // Setup drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('active');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                const file = e.dataTransfer.files[0];
+                handleFileSelect(file);
+            });
+
+            // Remove image button
+            removeImageBtn.addEventListener('click', () => {
+                uploadPreview.style.display = 'none';
+                document.querySelector('.upload-placeholder').style.display = 'flex';
+                imageUpload.value = '';
+                resetAnimationStage();
+                updateButtonState(false);
+            });
+
+            // Handle file selection
+            function handleFileSelect(file) {
+                if (!file) return;
+
+                if (!file.type.match('image.*')) {
+                    showToast('Error', 'Please select an image file', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    uploadPreview.style.display = 'block';
+                    document.querySelector('.upload-placeholder').style.display = 'none';
+
+                    // Update animation stage
+                    updateAnimationStage(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Animation Options Functionality
+        function initializeAnimationOptions() {
+            // Animation type selection
+            const imageOptionCards = document.querySelectorAll('#image-animation-types .option-card');
+            imageOptionCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    imageOptionCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    if (document.getElementById('preview-img').src) {
+                        applyAnimation(card.dataset.animation);
+                    }
+                });
+            });
+
+            // Text animation type selection
+            const textOptionCards = document.querySelectorAll('#text-animation-types .option-card');
+            textOptionCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    textOptionCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    if (document.querySelector('#animation-stage .text-animation-element')) {
+                        applyTextAnimation(card.dataset.animation);
+                    }
+                });
+            });
+
+            // Sliders
+            const speedSlider = document.getElementById('speed-slider');
+            const speedValue = document.getElementById('speed-value');
+            const durationSlider = document.getElementById('duration-slider');
+            const durationValue = document.getElementById('duration-value');
+
+            speedSlider.addEventListener('input', () => {
+                speedValue.textContent = speedSlider.value;
+
+                // Update animation if an image is loaded
+                if (document.getElementById('preview-img').src) {
+                    updateAnimationSpeed(speedSlider.value);
+                }
+            });
+
+            durationSlider.addEventListener('input', () => {
+                durationValue.textContent = durationSlider.value;
+
+                // Update animation if an image is loaded
+                if (document.getElementById('preview-img').src) {
+                    updateAnimationDuration(durationSlider.value);
+                }
+            });
+
+            // Effect checkboxes
+            const effectCheckboxes = document.querySelectorAll('.checkbox-group input');
+
+            effectCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    // Update animation if an image is loaded
+                    if (document.getElementById('preview-img').src) {
+                        applyEffects();
+                    }
+                });
+            });
+
+            // Generate button
+            const generateBtn = document.getElementById('generate-btn');
+
+            generateBtn.addEventListener('click', () => {
+                if (!document.getElementById('preview-img').src && !document.getElementById('text-input').value.trim()) {
+                    showToast('Upload Required', 'Please upload an image or enter text first', 'info');
+                    return;
+                }
+
+                // Show loading overlay
+                const loadingContainer = document.getElementById('loading-container');
+                loadingContainer.style.display = 'flex';
+
+                // Simulate AI processing
+                setTimeout(() => {
+                    loadingContainer.style.display = 'none';
+
+                    // Generate the animation
+                    generateAnimation();
+
+                    // Show success message
+                    showToast('Animation Ready', 'Your AI animation is ready to download or share!', 'success');
+
+                    // Enable download and share buttons
+                    updateButtonState(true);
+                }, 3000);
+            });
+
+            // Player controls
+            const playBtn = document.getElementById('play-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+
+            playBtn.addEventListener('click', () => {
+                playAnimation();
+            });
+
+            pauseBtn.addEventListener('click', () => {
+                pauseAnimation();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                resetAnimation();
+            });
+
+            // Action buttons
+            const downloadBtn = document.getElementById('download-btn');
+            const shareBtn = document.getElementById('share-btn');
+
+            downloadBtn.addEventListener('click', () => {
+                if (downloadBtn.disabled) return;
+                simulateDownload();
+            });
+
+            shareBtn.addEventListener('click', () => {
+                if (shareBtn.disabled) return;
+                showShareOptions();
+            });
+        }
+
+        // Animation Stage Functions
+        function updateAnimationStage(imageUrl) {
+            const animationStage = document.getElementById('animation-stage');
+
+            // Clear previous content
+            animationStage.innerHTML = '';
+
+            // Create image element
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.transition = 'transform 0.5s ease';
+
+            // Add to stage
+            animationStage.appendChild(img);
+
+            // Apply default animation (zoom)
+            applyAnimation('zoom');
+        }
+
+        function resetAnimationStage() {
+            const animationStage = document.getElementById('animation-stage');
+
+            // Reset to placeholder
+            animationStage.innerHTML = `
+                <div class="placeholder-message">
+                    <i class="fas fa-photo-video"></i>
+                    <p>Upload an image and select options to preview your animation</p>
+                </div>
+            `;
+        }
+
+        // Animation Functions
+        function applyAnimation(type) {
+            const img = document.querySelector('#animation-stage img');
+            if (!img) return;
+
+            // Reset any previous animations
+            img.style.animation = '';
+
+            // Apply animation type
+            switch (type) {
+                case 'zoom':
+                    img.style.animation = `zoom ${getDuration()}s ease-in-out infinite alternate`;
+                    break;
+                case 'float':
+                    img.style.animation = `float ${getDuration()}s ease-in-out infinite`;
+                    break;
+                case 'parallax':
+                    img.style.animation = `parallax ${getDuration()}s ease-in-out infinite alternate`;
+                    break;
+                case '3d':
+                    img.style.animation = `rotate3d ${getDuration()}s ease-in-out infinite alternate`;
+                    break;
+            }
+
+            // Apply animation speed
+            updateAnimationSpeed(getSpeed());
+
+            // Apply effects
+            applyEffects();
+        }
+
+        function updateAnimationSpeed(speed) {
+            const img = document.querySelector('#animation-stage img');
+            if (!img) return;
+
+            const animationDuration = 11 - speed; // Invert: higher speed = lower duration
+            img.style.animationDuration = `${animationDuration * 0.5}s`;
+        }
+
+        function updateAnimationDuration(duration) {
+            // This is just for the generate function
+            // The preview uses a different mechanism
+        }
+
+        function getDuration() {
+            return document.getElementById('duration-slider').value;
+        }
+
+        function getSpeed() {
+            return document.getElementById('speed-slider').value;
+        }
+
+        function applyEffects() {
+            const img = document.querySelector('#animation-stage img');
+            if (!img) return;
+
+            // Get effects
+            const blurEffect = document.getElementById('effect-blur').checked;
+            const particlesEffect = document.getElementById('effect-particles').checked;
+            const shadowsEffect = document.getElementById('effect-shadows').checked;
+
+            // Apply effects
+            if (blurEffect) {
+                img.style.filter = 'blur(2px)';
+                img.style.transform = 'scale(1.05)';
+            } else {
+                img.style.filter = '';
+                img.style.transform = '';
+            }
+
+            // Particles effect (simulated)
+            const animationStage = document.getElementById('animation-stage');
+            const existingParticles = document.querySelector('.particles-container');
+
+            if (particlesEffect && !existingParticles) {
+                const particles = document.createElement('div');
+                particles.className = 'particles-container';
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    particle.style.width = `${Math.random() * 10 + 2}px`;
+                    particle.style.height = particle.style.width;
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    particle.style.animationDuration = `${Math.random() * 5 + 2}s`;
+                    particles.appendChild(particle);
+                }
+                animationStage.appendChild(particles);
+            } else if (!particlesEffect && existingParticles) {
+                existingParticles.remove();
+            }
+
+            // Shadow effect (simulated)
+            if (shadowsEffect) {
+                img.style.boxShadow = '0 20px 20px rgba(0,0,0,0.4)';
+            } else {
+                img.style.boxShadow = '';
+            }
+        }
+
+        function playAnimation() {
+            const img = document.querySelector('#animation-stage img');
+            if (img) {
+                img.style.animationPlayState = 'running';
+            }
+        }
+
+        function pauseAnimation() {
+            const img = document.querySelector('#animation-stage img');
+            if (img) {
+                img.style.animationPlayState = 'paused';
+            }
+        }
+
+        function resetAnimation() {
+            const img = document.querySelector('#animation-stage img');
+            if (img) {
+                // Reset by removing and re-adding animation
+                const animation = img.style.animation;
+                img.style.animation = 'none';
+                // Force reflow
+                void img.offsetWidth;
+                img.style.animation = animation;
+            }
+        }
+
+        function generateAnimation() {
+            const textValue = document.getElementById('text-input').value.trim();
+            const hasImage = !!document.getElementById('preview-img').src;
+
+            if (textValue && !hasImage) {
+                // Text mode
+                updateTextStage(textValue);
+                const textAnimType = document.querySelector('#text-animation-types .option-card.active').dataset.animation;
+                applyTextAnimation(textAnimType);
+            } else {
+                // Image mode
+                const animationType = document.querySelector('#image-animation-types .option-card.active').dataset.animation;
+                applyAnimation(animationType);
+                const img = document.querySelector('#animation-stage img');
+                if (img) {
+                    img.style.filter = 'contrast(1.1) saturate(1.2)';
+                }
+            }
+
+            showToast('Animation Ready', 'Your AI animation is ready to download or share!', 'success');
+
+            // Enable download and share buttons
+            updateButtonState(true);
+        }
+
+        // Text Stage and Animation Functions
+        function updateTextStage(text) {
+            const animationStage = document.getElementById('animation-stage');
+            animationStage.innerHTML = '';
+            const div = document.createElement('div');
+            div.className = 'text-animation-element';
+            div.textContent = text;
+            animationStage.appendChild(div);
+        }
+
+        function applyTextAnimation(type) {
+            const el = document.querySelector('#animation-stage .text-animation-element');
+            if (!el) return;
+            el.className = 'text-animation-element';
+            switch(type) {
+                case 'typewriter':
+                    el.classList.add('text-typewriter');
+                    break;
+                case 'fade':
+                    el.classList.add('text-fade');
+                    break;
+                case 'slide':
+                    el.classList.add('text-slide');
+                    break;
+                case 'rotate':
+                    el.classList.add('text-rotate');
+                    break;
+            }
+        }
+
+        // Additional keyframe animations for the animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add keyframe animations to the head
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes zoom {
+                    0% { transform: scale(1); }
+                    100% { transform: scale(1.2); }
+                }
+
+                @keyframes float {
+                    0% { transform: translateY(0); }
+                    50% { transform: translateY(-20px); }
+                    100% { transform: translateY(0); }
+                }
+
+                @keyframes parallax {
+                    0% { transform: translateX(-20px) scale(1.1); }
+                    100% { transform: translateX(20px) scale(1.1); }
+                }
+
+                @keyframes rotate3d {
+                    0% { transform: perspective(1000px) rotateY(-10deg); }
+                    100% { transform: perspective(1000px) rotateY(10deg); }
+                }
+
+                .particles-container {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    pointer-events: none;
+                }
+
+                .particle {
+                    position: absolute;
+                    background-color: rgba(255, 255, 255, 0.8);
+                    border-radius: 50%;
+                    animation: particleFloat linear infinite;
+                }
+
+                @keyframes particleFloat {
+                    0% { transform: translate(0, 0); }
+                    100% { transform: translate(20px, -50px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        function updateButtonState(enabled) {
+            const downloadBtn = document.getElementById('download-btn');
+            const shareBtn = document.getElementById('share-btn');
+
+            downloadBtn.disabled = !enabled;
+            shareBtn.disabled = !enabled;
+
+            if (enabled) {
+                downloadBtn.classList.add('enabled');
+                shareBtn.classList.add('enabled');
+            } else {
+                downloadBtn.classList.remove('enabled');
+                shareBtn.classList.remove('enabled');
+            }
+        }
+
+        function simulateDownload() {
+            showToast('Download Started', 'Your animation is being prepared for download', 'success');
+
+            // In a real app, this would create a downloadable animation file
+            setTimeout(() => {
+                const a = document.createElement('a');
+                a.href = document.querySelector('#animation-stage img, #animation-stage video').src;
+                a.download = 'ai-animation.' + (document.querySelector('#animation-stage video') ? 'mp4' : 'gif');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }, 1500);
+        }
+
+        function showShareOptions() {
+            showToast('Share', 'Sharing options would appear here in the full version', 'info');
+        }
+
+        // Initialize Example Previews
+        function initializeExamples() {
+            const exampleCards = document.querySelectorAll('.example-card');
+
+            exampleCards.forEach(card => {
+                const playBtn = card.querySelector('.example-play-btn');
+
+                playBtn.addEventListener('click', () => {
+                    // In a real app, this would play the example animation
+                    // For now, we'll just show a toast
+                    showToast('Example', 'This would play the example animation in the full version', 'info');
+
+                    // Add a simple animation effect to simulate playback
+                    const img = card.querySelector('img');
+                    img.style.transition = 'transform 3s ease-in-out';
+                    img.style.transform = 'scale(1.1)';
+
+                    setTimeout(() => {
+                        img.style.transform = 'scale(1)';
+                    }, 3000);
+                });
+            });
+        }
+
+        // Initialize the prompt-based animation functionality
+        function initializePromptGeneration() {
+            const generatePromptBtn = document.getElementById('generate-prompt-btn');
+            const promptInput = document.getElementById('prompt-input');
+            const apiKeyInput = document.getElementById('api-key');
+            const apiProviderSelect = document.getElementById('api-provider');
+            const generationProgress = document.getElementById('generation-progress');
+            const modeTabs = document.querySelectorAll('.mode-tab');
+            
+            // Initialize mode tabs
+            modeTabs.forEach((tab, index) => {
+                tab.addEventListener('click', () => {
+                    modeTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update placeholder based on mode
+                    if (index === 0) { // Text mode
+                        promptInput.placeholder = "Enter your prompt here (e.g., 'A butterfly transforming from cocoon')";
+                    } else { // Image mode
+                        promptInput.placeholder = "Enter an image description or upload an image as reference";
+                    }
+                });
+            });
+            
+            // Save and load API key from localStorage
+            if (localStorage.getItem('animation_api_key')) {
+                apiKeyInput.value = localStorage.getItem('animation_api_key');
+            }
+            
+            apiKeyInput.addEventListener('change', () => {
+                localStorage.setItem('animation_api_key', apiKeyInput.value);
+            });
+            
+            // Generate animation from prompt
+            generatePromptBtn.addEventListener('click', () => {
+                const prompt = promptInput.value.trim();
+                const apiKey = apiKeyInput.value.trim();
+                const provider = apiProviderSelect.value;
+                
+                if (!prompt) {
+                    showToast('Error', 'Please enter a prompt for your animation', 'error');
+                    return;
+                }
+                
+                if (!apiKey) {
+                    showToast('Error', 'Please enter your API key', 'error');
+                    return;
+                }
+                
+                // Show generation progress
+                generationProgress.style.display = 'block';
+                generatePromptBtn.disabled = true;
+                
+                // Simulate API call for video generation
+                generateAnimationFromPrompt(prompt, apiKey, provider);
+            });
+        }
+        
+        function generateAnimationFromPrompt(prompt, apiKey, provider) {
+            showToast('Processing', 'Generating animation from your prompt...', 'info');
+            
+            // In a real implementation, you would make an API call to the selected provider
+            // For this demo, we'll simulate the generation process
+            
+            const progressEl = document.getElementById('generation-progress');
+            const stepStatus = progressEl.querySelector('.step-status');
+            const stepText = progressEl.querySelector('span');
+            
+            // Simulate processing steps
+            const steps = [
+                { message: "Analyzing prompt...", duration: 1000 },
+                { message: "Generating frames...", duration: 2000 },
+                { message: "Creating animation...", duration: 3000 },
+                { message: "Finalizing...", duration: 1000 }
+            ];
+            
+            let currentStep = 0;
+            
+            // Update progress indicator
+            function updateProgress() {
+                if (currentStep < steps.length) {
+                    stepStatus.style.width = `${(currentStep / steps.length) * 100}%`;
+                    stepText.textContent = steps[currentStep].message;
+                    
+                    setTimeout(() => {
+                        currentStep++;
+                        updateProgress();
+                    }, steps[currentStep].duration);
+                } else {
+                    // Animation generation complete
+                    stepStatus.style.width = '100%';
+                    stepText.textContent = 'Complete!';
+                    
+                    // Display the generated animation (simulated with a sample video)
+                    displayGeneratedAnimation(prompt, provider);
+                    
+                    // Reset UI after completion
+                    setTimeout(() => {
+                        progressEl.style.display = 'none';
+                        document.getElementById('generate-prompt-btn').disabled = false;
+                    }, 1000);
+                }
+            }
+            
+            updateProgress();
+        }
+        
+        function displayGeneratedAnimation(prompt, provider) {
+            // In a real implementation, this would display the actual generated animation
+            // For this demo, we'll use a sample video
+            
+            const animationStage = document.getElementById('animation-stage');
+            
+            // Clear any existing content
+            animationStage.innerHTML = '';
+            
+            // Create video element for the animation
+            const video = document.createElement('video');
+            video.controls = true;
+            video.autoplay = true;
+            video.loop = true;
+            video.muted = true;
+            
+            // Sample videos based on provider (in a real implementation, these would be generated)
+            const sampleVideos = {
+                'stable-diffusion': 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                'dall-e': 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+            };
+            
+            video.src = sampleVideos[provider] || sampleVideos['stable-diffusion'];
+            
+            // Add the video to the animation stage
+            animationStage.appendChild(video);
+            
+            // Update prompt info in the animation stage
+            const promptInfo = document.createElement('div');
+            promptInfo.className = 'prompt-info';
+            promptInfo.innerHTML = `<p><strong>Prompt:</strong> ${prompt}</p>`;
+            animationStage.appendChild(promptInfo);
+            
+            // Enable download and share buttons
+            updateButtonState(true);
+            
+            showToast('Success', 'Animation generated successfully!', 'success');
+        }
+    </script>
+</body>
+</html>

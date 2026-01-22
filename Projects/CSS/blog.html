@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name | Software Engineer & Data Scientist</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            200: '#c2d8ff',
+                            300: '#9ebaff',
+                            400: '#7a96ff',
+                            500: '#5a72fb',
+                            600: '#4f55f0',
+                            700: '#4542d2',
+                            800: '#3937a9',
+                            900: '#333486',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': {
+                                transform: 'translate(0px, 0px) scale(1)',
+                            },
+                            '33%': {
+                                transform: 'translate(30px, -50px) scale(1.1)',
+                            },
+                            '66%': {
+                                transform: 'translate(-20px, 20px) scale(0.9)',
+                            },
+                            '100%': {
+                                transform: 'translate(0px, 0px) scale(1)',
+                            },
+                        },
+                        float: {
+                            '0%, 100%': {
+                                transform: 'translateY(0)',
+                            },
+                            '50%': {
+                                transform: 'translateY(-10px)',
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- AOS Library for scroll animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Fixed Navbar -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold text-primary-600">YourName</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-gray-700 hover:text-primary-600 transition-colors duration-300 font-medium">About</a>
+                    <a href="#qualifications" class="text-gray-700 hover:text-primary-600 transition-colors duration-300 font-medium">Qualifications</a>
+                    <a href="#projects" class="text-gray-700 hover:text-primary-600 transition-colors duration-300 font-medium">Projects</a>
+                    <a href="#blog" class="text-gray-700 hover:text-primary-600 transition-colors duration-300 font-medium">Blog</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary-600 transition-colors duration-300 font-medium">Contact</a>
+                </div>
+                <div class="flex md:hidden items-center">
+                    <button id="mobile-menu-button" class="outline-none mobile-menu-button">
+                        <svg class="w-6 h-6 text-gray-700" x-show="!showMenu" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+            <div class="px-2 pt-2 pb-4 space-y-1">
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">About</a>
+                <a href="#qualifications" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">Qualifications</a>
+                <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">Projects</a>
+                <a href="#blog" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">Blog</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 pt-28 pb-20 overflow-hidden">
+        <!-- Animated background elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+            <div class="absolute top-1/4 right-1/4 w-72 h-72 bg-primary-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
+            <div class="absolute top-1/3 right-1/3 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
+            <div class="absolute top-1/2 right-1/2 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                <div class="lg:w-1/2 mb-10 lg:mb-0" data-aos="fade-right">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4">
+                        <span class="block">Your Name</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">Software Engineer & Data Scientist</span>
+                    </h1>
+                    <p class="text-xl text-blue-100 mb-8 max-w-xl">Turning complex data into actionable insights and building innovative software solutions that solve real-world problems.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            View Projects
+                        </a>
+                        <a href="#contact" class="px-6 py-3 bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold rounded-lg transition-all duration-300 transform hover:-translate-y-1">
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 flex justify-center" data-aos="fade-left">
+                    <div class="relative">
+                        <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-primary-400 to-purple-500 p-1 shadow-2xl animate-float">
+                            <div class="w-full h-full rounded-full bg-blue-900 flex items-center justify-center overflow-hidden">
+                                <!-- Replace with your profile image or keep the icon -->
+                                <i class="fas fa-user-circle text-9xl text-blue-200 opacity-70"></i>
+                            </div>
+                        </div>
+                        <div class="absolute -top-6 -right-6 w-24 h-24 bg-yellow-400 rounded-lg rotate-12 flex items-center justify-center shadow-lg">
+                            <i class="fas fa-code text-3xl text-gray-900"></i>
+                        </div>
+                        <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-primary-500 rounded-lg -rotate-12 flex items-center justify-center shadow-lg">
+                            <i class="fas fa-database text-3xl text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section class="py-10 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-75">
+                <i class="fab fa-python text-4xl text-gray-700"></i>
+                <i class="fab fa-react text-4xl text-gray-700"></i>
+                <i class="fab fa-js-square text-4xl text-gray-700"></i>
+                <i class="fab fa-aws text-4xl text-gray-700"></i>
+                <i class="fab fa-docker text-4xl text-gray-700"></i>
+                <i class="fas fa-database text-4xl text-gray-700"></i>
+                <i class="fab fa-github text-4xl text-gray-700"></i>
+                <i class="fab fa-tensorflow text-4xl text-gray-700"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-b from-white to-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">About Me</h2>
+                <div class="w-16 h-1 bg-primary-500 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600">Software Engineer with a passion for data science and building impactful solutions</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2" data-aos="fade-right" data-aos-delay="100">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">My Journey</h3>
+                    <div class="space-y-4 text-gray-700">
+                        <p>Hello! I'm [Your Name], a passionate software engineer with a focus on data science and machine learning. With [X] years of experience in the field, I specialize in [your specific skills or domains].</p>
+                        <p>My approach combines robust engineering principles with cutting-edge data science techniques to solve complex problems and create value from data.</p>
+                        <p>When I'm not coding, you can find me [your hobbies or interests].</p>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4">Areas of Expertise</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-brain text-blue-600"></i>
+                                </div>
+                                <span>Machine Learning</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-green-600"></i>
+                                </div>
+                                <span>Data Analysis</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                    <i class="fas fa-code text-purple-600"></i>
+                                </div>
+                                <span>Software Development</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                                    <i class="fas fa-cloud text-yellow-600"></i>
+                                </div>
+                                <span>Cloud Computing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="200">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Technical Skills</h3>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Python</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary-600 h-2.5 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Machine Learning</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary-600 h-2.5 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Data Analysis</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary-600 h-2.5 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">SQL & Databases</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary-600 h-2.5 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Web Development</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary-600 h-2.5 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4">Tools & Technologies</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Python</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">TensorFlow</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">PyTorch</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Scikit-learn</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Pandas</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">NumPy</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">SQL</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Git</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Docker</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">AWS</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Flask</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Django</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Qualifications Section -->
+    <section id="qualifications" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Qualifications</h2>
+                <div class="w-16 h-1 bg-primary-500 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600">My educational background and professional journey</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Education -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-6 bg-primary-600 text-white">
+                        <h3 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-graduation-cap mr-3"></i> Education
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-8 relative pl-8 border-l-2 border-primary-200">
+                            <div class="absolute w-4 h-4 bg-primary-500 rounded-full -left-[9px] top-1"></div>
+                            <h4 class="text-xl font-bold text-gray-900">Master's Degree in [Your Field]</h4>
+                            <p class="text-primary-600 font-medium">University Name</p>
+                            <p class="text-gray-500 text-sm mb-2">2018 - 2020</p>
+                            <p class="text-gray-700">Description of your degree, major achievements, or relevant coursework.</p>
+                        </div>
+                        
+                        <div class="relative pl-8 border-l-2 border-primary-200">
+                            <div class="absolute w-4 h-4 bg-primary-500 rounded-full -left-[9px] top-1"></div>
+                            <h4 class="text-xl font-bold text-gray-900">Bachelor's Degree in [Your Field]</h4>
+                            <p class="text-primary-600 font-medium">University Name</p>
+                            <p class="text-gray-500 text-sm mb-2">2014 - 2018</p>
+                            <p class="text-gray-700">Description of your degree, major achievements, or relevant coursework.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Experience -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-6 bg-primary-600 text-white">
+                        <h3 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-briefcase mr-3"></i> Experience
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-8 relative pl-8 border-l-2 border-primary-200">
+                            <div class="absolute w-4 h-4 bg-primary-500 rounded-full -left-[9px] top-1"></div>
+                            <h4 class="text-xl font-bold text-gray-900">Senior Data Scientist</h4>
+                            <p class="text-primary-600 font-medium">Company Name</p>
+                            <p class="text-gray-500 text-sm mb-2">2021 - Present</p>
+                            <p class="text-gray-700">Description of your role, responsibilities, and key achievements.</p>
+                        </div>
+                        
+                        <div class="relative pl-8 border-l-2 border-primary-200">
+                            <div class="absolute w-4 h-4 bg-primary-500 rounded-full -left-[9px] top-1"></div>
+                            <h4 class="text-xl font-bold text-gray-900">Software Engineer</h4>
+                            <p class="text-primary-600 font-medium">Company Name</p>
+                            <p class="text-gray-500 text-sm mb-2">2018 - 2021</p>
+                            <p class="text-gray-700">Description of your role, responsibilities, and key achievements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Certifications -->
+            <div class="mt-12 bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                <div class="p-6 bg-primary-600 text-white">
+                    <h3 class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-certificate mr-3"></i> Certifications
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="border border-gray-200 rounded-lg p-4 transition-all duration-300 hover:shadow-md hover:border-primary-300">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-award text-yellow-500 mr-2 text-xl"></i>
+                                <h4 class="font-semibold">Machine Learning Specialization</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">Issuing Organization</p>
+                            <p class="text-xs text-gray-500">Issued: January 2022</p>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 transition-all duration-300 hover:shadow-md hover:border-primary-300">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-award text-yellow-500 mr-2 text-xl"></i>
+                                <h4 class="font-semibold">Data Science Professional</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">Issuing Organization</p>
+                            <p class="text-xs text-gray-500">Issued: June 2021</p>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 transition-all duration-300 hover:shadow-md hover:border-primary-300">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-award text-yellow-500 mr-2 text-xl"></i>
+                                <h4 class="font-semibold">Cloud Computing Certification</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">Issuing Organization</p>
+                            <p class="text-xs text-gray-500">Issued: March 2020</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
+                <div class="w-16 h-1 bg-primary-500 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600">Showcasing my work in software engineering and data science</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 1" class="w-full h-48 object-cover">
+                        <div class="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 m-2 rounded-full">
+                            Featured
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Machine Learning Project</h3>
+                        <p class="text-gray-700 mb-4">A brief description of this project, highlighting the technologies used and your role in it.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">Python</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">TensorFlow</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">Data Science</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fab fa-github mr-2"></i> View Code
+                            </a>
+                            <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                Live Demo <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 2" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Data Visualization Dashboard</h3>
+                        <p class="text-gray-700 mb-4">A brief description of this project, highlighting the technologies used and your role in it.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">Python</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">Plotly</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">Dash</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fab fa-github mr-2"></i> View Code
+                            </a>
+                            <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                Live Demo <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 3" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">NLP Text Analysis Tool</h3>
+                        <p class="text-gray-700 mb-4">A brief description of this project, highlighting the technologies used and your role in it.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">Python</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">NLTK</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs">spaCy</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fab fa-github mr-2"></i> View Code
+                            </a>
+                            <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                Live Demo <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    View All Projects <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">From My Blog</h2>
+                <div class="w-16 h-1 bg-primary-500 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600">Insights and tutorials on software engineering and data science</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <article class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/600x400" alt="Blog Post 1" class="w-full h-48 object-cover">
+                    </a>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>April 15, 2023</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock"></i>
+                            <span>5 min read</span>
+                        </div>
+                        <a href="#">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-primary-600 transition-colors">Introduction to Machine Learning Algorithms</h3>
+                        </a>
+                        <p class="text-gray-700 mb-4">A brief overview of popular machine learning algorithms and their applications in real-world scenarios.</p>
+                        <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                            Read More <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <!-- Blog Post 2 -->
+                <article class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/600x400" alt="Blog Post 2" class="w-full h-48 object-cover">
+                    </a>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>March 28, 2023</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock"></i>
+                            <span>8 min read</span>
+                        </div>
+                        <a href="#">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-primary-600 transition-colors">Data Preprocessing Techniques Every Data Scientist Should Know</h3>
+                        </a>
+                        <p class="text-gray-700 mb-4">Learn about essential data preprocessing techniques that can significantly improve your model's performance.</p>
+                        <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                            Read More <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <!-- Blog Post 3 -->
+                <article class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/600x400" alt="Blog Post 3" class="w-full h-48 object-cover">
+                    </a>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>February 12, 2023</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock"></i>
+                            <span>6 min read</span>
+                        </div>
+                        <a href="#">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-primary-600 transition-colors">Building Scalable Data Pipelines: Best Practices</h3>
+                        </a>
+                        <p class="text-gray-700 mb-4">Explore best practices for designing and implementing scalable data pipelines for machine learning projects.</p>
+                        <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                            Read More <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-4xl font-bold mb-2">
+                        <span class="inline-block" data-count="20">0</span>+
+                    </div>
+                    <p class="text-blue-200">Projects Completed</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-4xl font-bold mb-2">
+                        <span class="inline-block" data-count="15">0</span>
+                    </div>
+                    <p class="text-blue-200">Research Papers</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-4xl font-bold mb-2">
+                        <span class="inline-block" data-count="30">0</span>+
+                    </div>
+                    <p class="text-blue-200">Blog Articles</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-4xl font-bold mb-2">
+                        <span class="inline-block" data-count="5">0</span>
+                    </div>
+                    <p class="text-blue-200">Years Experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get In Touch</h2>
+                <div class="w-16 h-1 bg-primary-500 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600">Have a question or want to work together? Drop me a message!</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <!-- Contact Info -->
+                <div class="lg:col-span-2 bg-gray-50 p-8 rounded-xl" data-aos="fade-right">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Contact Information</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-envelope text-primary-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Email</h4>
+                                <p class="text-gray-700">your.email@example.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-map-marker-alt text-primary-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Location</h4>
+                                <p class="text-gray-700">City, Country</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fab fa-linkedin-in text-primary-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">LinkedIn</h4>
+                                <p class="text-gray-700">linkedin.com/in/yourprofile</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fab fa-github text-primary-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">GitHub</h4>
+                                <p class="text-gray-700">github.com/yourusername</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="lg:col-span-3 bg-white rounded-xl shadow-lg p-8" data-aos="fade-left">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Send Message</h3>
+                    
+                    <form>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" required>
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" required>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">YourName</h3>
+                    <p class="text-gray-400 mb-6 max-w-md">Software Engineer & Data Scientist specializing in building innovative solutions that solve real-world problems.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-kaggle"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                        <li><a href="#qualifications" class="text-gray-400 hover:text-white transition-colors">Qualifications</a></li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="#blog" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Subscribe to my newsletter for the latest articles and updates.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 w-full rounded-l-lg focus:outline-none text-gray-900">
+                        <button type="submit" class="bg-primary-500 hover:bg-primary-600 px-4 py-2 rounded-r-lg transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2023 Your Name. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // Animate counting for statistics
+        const countElements = document.querySelectorAll('[data-count]');
+        
+        const animateCount = (el) => {
+            const target = parseInt(el.getAttribute('data-count'));
+            const duration = 2000; // ms
+            const step = 50; // ms
+            const increment = target / (duration / step);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current > target) {
+                    el.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    el.textContent = Math.floor(current);
+                }
+            }, step);
+        };
+        
+        // Intersection Observer for statistics counting animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const countElements = entry.target.querySelectorAll('[data-count]');
+                    countElements.forEach(el => animateCount(el));
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        // Observe statistics section
+        const statsSection = document.querySelector('.py-16.bg-gradient-to-r');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
