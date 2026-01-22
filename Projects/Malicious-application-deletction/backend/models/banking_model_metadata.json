@@ -1,0 +1,10 @@
+{
+  "model_version": "v20250901_001141",
+  "training_timestamp": "2025-09-01T00:11:41.307748",
+  "training_samples": 12,
+  "features_count": 18,
+  "model_type": "IsolationForest",
+  "training_duration_seconds": 1.256434,
+  "training_method": "synthetic_generation",
+  "virtual_environment_compatible": true
+}
