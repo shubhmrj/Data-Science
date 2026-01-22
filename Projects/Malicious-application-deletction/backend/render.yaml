@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: apk-detector-backend
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python production_api.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PORT
+        value: 5000
+    healthCheckPath: /api/health
