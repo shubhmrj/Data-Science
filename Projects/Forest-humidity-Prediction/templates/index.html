@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Watch Algeria - Forest Fire Prediction System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --char-black: #0d0f0e;
+            --ash-gray: #1a1f1e;
+            --ember-orange: #ff6b35;
+            --safe-cyan: #06ffa5;
+            --data-blue: #4ecdc4;
+            --font-display: 'Rajdhani', sans-serif;
+            --font-mono: 'Courier Prime', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--char-black);
+            color: var(--safe-cyan);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 53, 0.08) 0%, transparent 60%),
+                linear-gradient(135deg, var(--char-black) 0%, var(--ash-gray) 50%, var(--char-black) 100%);
+            z-index: -1;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fire-icon-large {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--ember-orange) 0%, #c1121f 100%);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            margin: 0 auto 2rem;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 60px rgba(255, 107, 53, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 1rem;
+            color: var(--safe-cyan);
+            text-shadow: 0 0 20px rgba(6, 255, 165, 0.5);
+        }
+
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            color: var(--data-blue);
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 1.5rem 4rem;
+            background: linear-gradient(135deg, var(--ember-orange) 0%, #c1121f 100%);
+            color: var(--char-black);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.5);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.7);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            background: rgba(26, 31, 30, 0.8);
+            border: 1px solid var(--data-blue);
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--ember-orange);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--ember-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--data-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="fire-icon-large"></div>
+        <h1>Fire Watch</h1>
+        <p class="subtitle">Algerian Forest Fire Prediction System</p>
+        <a href="{{ url_for('predict_datapoint') }}" class="cta-button">Launch System</a>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🔥</div>
+                <h3 class="feature-title">Real-Time Prediction</h3>
+                <p class="feature-desc">ML-powered FWI calculation using weather and fire index data</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Risk Assessment</h3>
+                <p class="feature-desc">Color-coded alerts from Low to Extreme danger levels</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌲</div>
+                <h3 class="feature-title">Regional Coverage</h3>
+                <p class="feature-desc">Monitoring Bejaia and Sidi Bel-abbes forest regions</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
