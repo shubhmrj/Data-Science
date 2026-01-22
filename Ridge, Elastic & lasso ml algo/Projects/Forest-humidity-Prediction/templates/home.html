@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Watch - Algeria Forest Fire Prediction System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Unique font pairing: Rajdhani (industrial) + Courier Prime (technical) -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Fire Watch Palette - inspired by ember glow and tactical displays */
+            --char-black: #0d0f0e;
+            --ash-gray: #1a1f1e;
+            --smoke-gray: #2d3634;
+            --topo-green: #3a4f47;
+            --ember-orange: #ff6b35;
+            --hot-amber: #f7931e;
+            --danger-red: #c1121f;
+            --alert-yellow: #ffd23f;
+            --safe-cyan: #06ffa5;
+            --data-blue: #4ecdc4;
+            
+            /* Typography */
+            --font-display: 'Rajdhani', sans-serif;
+            --font-mono: 'Courier Prime', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--char-black);
+            color: var(--safe-cyan);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Atmospheric Background - Topographic Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 79px,
+                    rgba(58, 79, 71, 0.15) 79px,
+                    rgba(58, 79, 71, 0.15) 81px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 79px,
+                    rgba(58, 79, 71, 0.15) 79px,
+                    rgba(58, 79, 71, 0.15) 81px
+                ),
+                radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(6, 255, 165, 0.03) 0%, transparent 50%),
+                linear-gradient(135deg, var(--char-black) 0%, var(--ash-gray) 50%, var(--char-black) 100%);
+            z-index: -1;
+            animation: drift 120s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-20px) scale(1.02); }
+        }
+
+        /* Heat Shimmer Effect */
+        .heat-shimmer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                linear-gradient(
+                    180deg,
+                    transparent 0%,
+                    rgba(255, 107, 53, 0.01) 50%,
+                    transparent 100%
+                );
+            animation: shimmer 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 0.6; transform: translateY(-10px); }
+        }
+
+        /* Header - Emergency Command Style */
+        header {
+            background: linear-gradient(180deg, rgba(26, 31, 30, 0.95) 0%, transparent 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--ember-orange);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fire-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--ember-orange) 0%, var(--danger-red) 100%);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--safe-cyan);
+            text-shadow: 0 0 10px rgba(6, 255, 165, 0.5);
+        }
+
+        .system-status {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--data-blue);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--data-blue);
+            border-radius: 4px;
+            background: rgba(78, 205, 196, 0.1);
+            animation: fadeIn 1s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Card System */
+        .prediction-card {
+            background: linear-gradient(135deg, rgba(26, 31, 30, 0.9) 0%, rgba(45, 54, 52, 0.8) 100%);
+            border: 1px solid var(--topo-green);
+            border-radius: 12px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(6, 255, 165, 0.1);
+            animation: cardReveal 0.8s ease-out 0.2s backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .prediction-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--ember-orange) 30%, 
+                var(--alert-yellow) 50%, 
+                var(--ember-orange) 70%, 
+                transparent 100%);
+            animation: scanline 3s ease-in-out infinite;
+        }
+
+        @keyframes scanline {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(58, 79, 71, 0.5);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ember-orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--data-blue);
+            opacity: 0.8;
+        }
+
+        /* Form Groups */
+        .form-section {
+            margin-bottom: 2.5rem;
+            animation: sectionFade 0.6s ease-out backwards;
+        }
+
+        .form-section:nth-child(1) { animation-delay: 0.4s; }
+        .form-section:nth-child(2) { animation-delay: 0.5s; }
+        .form-section:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes sectionFade {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--alert-yellow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '▸';
+            color: var(--ember-orange);
+            font-size: 1.3rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Input Fields - Technical Monitor Style */
+        .form-field {
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--safe-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .required-mark {
+            color: var(--danger-red);
+            font-size: 1.2rem;
+        }
+
+        .param-info {
+            font-size: 0.75rem;
+            color: var(--data-blue);
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(13, 15, 14, 0.6);
+            border: 2px solid var(--topo-green);
+            border-radius: 6px;
+            color: var(--safe-cyan);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--ember-orange);
+            background: rgba(13, 15, 14, 0.9);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            transform: translateY(-2px);
+        }
+
+        input[type="number"]::placeholder {
+            color: var(--topo-green);
+            opacity: 0.6;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2306ffa5' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        select option {
+            background: var(--char-black);
+            color: var(--safe-cyan);
+            padding: 0.5rem;
+        }
+
+        .range-hint {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--data-blue);
+            margin-top: 0.4rem;
+            opacity: 0.7;
+        }
+
+        .tooltip-trigger {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: var(--ember-orange);
+            color: var(--char-black);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: help;
+            margin-left: 0.3rem;
+            position: relative;
+        }
+
+        .tooltip-trigger:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.7rem 1rem;
+            background: var(--ash-gray);
+            border: 1px solid var(--ember-orange);
+            border-radius: 6px;
+            white-space: nowrap;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--safe-cyan);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: tooltipFade 0.2s ease-out;
+        }
+
+        @keyframes tooltipFade {
+            from { opacity: 0; transform: translateX(-50%) translateY(5px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Submit Button - Emergency Action Style */
+        .submit-container {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .btn-predict {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 1.2rem 4rem;
+            background: linear-gradient(135deg, var(--ember-orange) 0%, var(--danger-red) 100%);
+            color: var(--char-black);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(255, 107, 53, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-predict::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-predict:hover::before {
+            left: 100%;
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 40px rgba(255, 107, 53, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-predict:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-predict.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--char-black);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.8rem;
+            vertical-align: middle;
+        }
+
+        .btn-predict.loading .loading-spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Results Display - Alert Status */
+        .results-panel {
+            margin-top: 3rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(13, 15, 14, 0.95) 0%, rgba(26, 31, 30, 0.9) 100%);
+            border: 2px solid var(--ember-orange);
+            border-radius: 12px;
+            text-align: center;
+            animation: resultsReveal 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(255, 107, 53, 0.3);
+        }
+
+        @keyframes resultsReveal {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .results-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .results-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .results-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--alert-yellow);
+            margin-bottom: 1.5rem;
+        }
+
+        .fwi-value {
+            font-family: var(--font-mono);
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--ember-orange);
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
+            margin: 1rem 0;
+            line-height: 1;
+            animation: numberCount 1s ease-out;
+        }
+
+        @keyframes numberCount {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .fwi-label {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: var(--data-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        /* Risk Indicators */
+        .risk-indicator {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: alertPulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.2) 0%, rgba(6, 255, 165, 0.1) 100%);
+            border: 2px solid var(--safe-cyan);
+            color: var(--safe-cyan);
+            box-shadow: 0 0 40px rgba(6, 255, 165, 0.4);
+        }
+
+        .risk-moderate {
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.2) 0%, rgba(255, 210, 63, 0.1) 100%);
+            border: 2px solid var(--alert-yellow);
+            color: var(--alert-yellow);
+            box-shadow: 0 0 40px rgba(255, 210, 63, 0.4);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, rgba(193, 18, 31, 0.3) 0%, rgba(193, 18, 31, 0.1) 100%);
+            border: 2px solid var(--danger-red);
+            color: var(--danger-red);
+            box-shadow: 0 0 40px rgba(193, 18, 31, 0.5);
+        }
+
+        .risk-extreme {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.3) 0%, rgba(255, 107, 53, 0.1) 100%);
+            border: 2px solid var(--ember-orange);
+            color: var(--ember-orange);
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
+            animation: dangerFlash 1s ease-in-out infinite;
+        }
+
+        @keyframes dangerFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .risk-icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+            display: inline-block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .risk-description {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: var(--data-blue);
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Error Messages */
+        .error-panel {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(193, 18, 31, 0.2) 0%, rgba(193, 18, 31, 0.1) 100%);
+            border: 2px solid var(--danger-red);
+            border-radius: 8px;
+            color: var(--danger-red);
+            font-family: var(--font-mono);
+            animation: errorShake 0.5s ease-out;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .error-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--topo-green);
+            border-top: 1px solid var(--topo-green);
+        }
+
+        footer a {
+            color: var(--data-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--ember-orange);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-predict {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+            }
+
+            .fwi-value {
+                font-size: 3.5rem;
+            }
+
+            .risk-indicator {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Loading State Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 15, 14, 0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loader-animation {
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--topo-green);
+            border-top-color: var(--ember-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="heat-shimmer"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="fire-icon"></div>
+                <h1>Fire Watch Algeria</h1>
+            </div>
+            <div class="system-status">SYSTEM: OPERATIONAL | {{ "2026-01-01 22:49" }} IST</div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="prediction-card">
+            <div class="card-header">
+                <h2>Wildfire Risk Assessment</h2>
+                <p class="card-subtitle">PREDICT FIRE WEATHER INDEX (FWI) | ALGERIAN FOREST MONITORING</p>
+            </div>
+
+            <form action="{{ url_for('predict_datapoint') }}" method="post" id="predictionForm">
+                
+                <!-- Weather Parameters -->
+                <div class="form-section">
+                    <h3 class="section-title">Meteorological Data</h3>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label>
+                                TEMPERATURE (°C) <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Temperature at noon (max)">?</span>
+                            </label>
+                            <input type="number" name="Temperature" step="0.1" min="22" max="42" required 
+                                   placeholder="22.0 - 42.0" aria-label="Temperature in Celsius">
+                            <div class="range-hint">RANGE: 22-42°C</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label>
+                                RELATIVE HUMIDITY (%) <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Relative humidity percentage">?</span>
+                            </label>
+                            <input type="number" name="RH" min="21" max="90" required 
+                                   placeholder="21 - 90" aria-label="Relative Humidity">
+                            <div class="range-hint">RANGE: 21-90%</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label>
+                                WIND SPEED (km/h) <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Wind speed in kilometers per hour">?</span>
+                            </label>
+                            <input type="number" name="Ws" min="6" max="29" required 
+                                   placeholder="6 - 29" aria-label="Wind Speed">
+                            <div class="range-hint">RANGE: 6-29 km/h</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label>
+                                RAINFALL (mm) <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Total daily rainfall in millimeters">?</span>
+                            </label>
+                            <input type="number" name="Rain" step="0.1" min="0" max="16.8" required 
+                                   placeholder="0.0 - 16.8" aria-label="Rainfall">
+                            <div class="range-hint">RANGE: 0-16.8 mm</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FWI Components -->
+                <div class="form-section">
+                    <h3 class="section-title">Fire Weather Index Components</h3>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label>
+                                FFMC INDEX <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Fine Fuel Moisture Code">?</span>
+                            </label>
+                            <input type="number" name="FFMC" step="0.1" min="28.6" max="92.5" required 
+                                   placeholder="28.6 - 92.5" aria-label="Fine Fuel Moisture Code">
+                            <div class="range-hint">RANGE: 28.6-92.5</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label>
+                                DMC INDEX <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Duff Moisture Code">?</span>
+                            </label>
+                            <input type="number" name="DMC" step="0.1" min="1.1" max="65.9" required 
+                                   placeholder="1.1 - 65.9" aria-label="Duff Moisture Code">
+                            <div class="range-hint">RANGE: 1.1-65.9</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label>
+                                ISI INDEX <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Initial Spread Index">?</span>
+                            </label>
+                            <input type="number" name="ISI" step="0.1" min="0" max="18.5" required 
+                                   placeholder="0.0 - 18.5" aria-label="Initial Spread Index">
+                            <div class="range-hint">RANGE: 0-18.5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regional Data -->
+                <div class="form-section">
+                    <h3 class="section-title">Classification & Location</h3>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label>
+                                FIRE CLASSES <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Historical fire classification">?</span>
+                            </label>
+                            <select name="Classes" required aria-label="Fire Classification">
+                                <option value="">-- SELECT CLASSIFICATION --</option>
+                                <option value="0">NOT FIRE (HISTORICAL)</option>
+                                <option value="1">FIRE (HISTORICAL)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label>
+                                REGION <span class="required-mark">*</span>
+                                <span class="tooltip-trigger" data-tooltip="Algerian forest region">?</span>
+                            </label>
+                            <select name="Region" required aria-label="Region">
+                                <option value="">-- SELECT REGION --</option>
+                                <option value="0">BEJAIA (NORTHEAST)</option>
+                                <option value="1">SIDI BEL-ABBES (NORTHWEST)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="submit-container">
+                    <button type="submit" class="btn-predict" id="submitBtn">
+                        CALCULATE FIRE RISK
+                        <span class="loading-spinner"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Display -->
+        {% if results %}
+        <div class="results-panel">
+            <div class="results-content">
+                <h3 class="results-title">🔥 FIRE WEATHER INDEX PREDICTION</h3>
+                <div class="fwi-value">{{ "%.2f"|format(results) }}</div>
+                <p class="fwi-label">Fire Weather Index (FWI)</p>
+
+                {% if results < 5.2 %}
+                <div class="risk-indicator risk-low">
+                    <span class="risk-icon">🟢</span>
+                    LOW RISK
+                </div>
+                <p class="risk-description">
+                    Minimal fire weather conditions. Standard forest management protocols apply. 
+                    Fire behavior expected to be minimal with easy suppression.
+                </p>
+
+                {% elif results < 11.2 %}
+                <div class="risk-indicator risk-moderate">
+                    <span class="risk-icon">🟡</span>
+                    MODERATE RISK
+                </div>
+                <p class="risk-description">
+                    Elevated fire weather conditions. Increased caution advised for outdoor activities. 
+                    Fire behavior may intensify under wind exposure. Monitor conditions closely.
+                </p>
+
+                {% elif results < 21.3 %}
+                <div class="risk-indicator risk-high">
+                    <span class="risk-icon">🔴</span>
+                    HIGH RISK
+                </div>
+                <p class="risk-description">
+                    Dangerous fire weather conditions. Significant fire potential exists. 
+                    Rapid fire spread expected. Implement enhanced monitoring and prepare suppression resources.
+                </p>
+
+                {% else %}
+                <div class="risk-indicator risk-extreme">
+                    <span class="risk-icon">⚠️</span>
+                    EXTREME DANGER
+                </div>
+                <p class="risk-description">
+                    CRITICAL FIRE WEATHER CONDITIONS. Immediate action required. 
+                    Extreme fire behavior expected with rapid spread potential. Full suppression readiness mandatory.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Error Display -->
+        {% if error %}
+        <div class="error-panel">
+            <span class="error-icon">⚠</span>
+            <strong>ERROR:</strong> {{ error }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>FIRE WATCH ALGERIA © 2026 | POWERED BY MACHINE LEARNING | 
+           <a href="https://github.com/shubhmrj/Predict-forest-fire" target="_blank">VIEW SOURCE</a>
+        </p>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader-animation"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const form = document.getElementById('predictionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        form.addEventListener('submit', function(e) {
+            // Show loading state
+            submitBtn.classList.add('loading');
+            loadingOverlay.classList.add('active');
+        });
+
+        // Add real-time validation feedback
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                const min = parseFloat(this.min);
+                const max = parseFloat(this.max);
+
+                if (value < min || value > max) {
+                    this.style.borderColor = 'var(--danger-red)';
+                    this.style.boxShadow = '0 0 20px rgba(193, 18, 31, 0.5)';
+                } else {
+                    this.style.borderColor = 'var(--safe-cyan)';
+                    this.style.boxShadow = '0 0 20px rgba(6, 255, 165, 0.3)';
+                }
+            });
+        });
+
+        // Animate page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Stagger form field animations
+            const formFields = document.querySelectorAll('.form-field');
+            formFields.forEach((field, index) => {
+                setTimeout(() => {
+                    field.style.opacity = '1';
+                    field.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        });
+    </script>
+</body>
+</html>
