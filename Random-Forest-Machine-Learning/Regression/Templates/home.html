@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Price Prediction</title>
+</head>
+
+<body>
+<div class="login">
+    <h1>Car Price Prediction</h1>
+
+    <form action="{{ url_for('predict_datapoint') }}" method="post">
+
+        <!-- CATEGORICAL -->
+        <input type="text" name="model" placeholder="Car Model" required><br>
+
+        <select name="seller_type" required>
+            <option value="">Seller Type</option>
+            <option value="Individual">Individual</option>
+            <option value="Dealer">Dealer</option>
+            <option value="Trustmark Dealer">Trustmark Dealer</option>
+        </select><br>
+
+        <select name="fuel_type" required>
+            <option value="">Fuel Type</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="CNG">CNG</option>
+            <option value="LPG">LPG</option>
+            <option value="Electric">Electric</option>
+        </select><br>
+
+        <select name="transmission_type" required>
+            <option value="">Transmission</option>
+            <option value="Manual">Manual</option>
+            <option value="Automatic">Automatic</option>
+        </select><br>
+
+        <!-- NUMERICAL -->
+        <input type="number" name="vehicle_age" placeholder="Vehicle Age (years)" step="1" required><br>
+        <input type="number" name="km_driven" placeholder="KM Driven" step="1" required><br>
+        <input type="number" name="mileage" placeholder="Mileage (km/l)" step="0.1" required><br>
+        <input type="number" name="engine" placeholder="Engine (CC)" step="1" required><br>
+        <input type="number" name="max_power" placeholder="Max Power (bhp)" step="0.1" required><br>
+        <input type="number" name="seats" placeholder="Seats" step="1" required><br>
+
+        <button type="submit">Predict Price</button>
+    </form>
+
+    {% if results %}
+        <h2>Predicted Car Price: ₹ {{ results }}</h2>
+    {% endif %}
+</div>
+</body>
+</html>
