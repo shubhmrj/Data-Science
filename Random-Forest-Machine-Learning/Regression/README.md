@@ -1,4 +1,4 @@
-# 🚗 Car Price Prediction System
+#            Price Prediction System
 
 ## Project Overview
 
