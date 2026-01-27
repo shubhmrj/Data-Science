@@ -1,23 +1,42 @@
 # 📊 Data Science & Machine Learning Complete Guide
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://www.python.org/) [![Jupyter](https://img.shields.io/badge/Notebook-Jupyter-orange?logo=jupyter)](https://jupyter.org/) [![Pandas](https://img.shields.io/badge/Library-Pandas-yellow?logo=pandas)](https://pandas.pydata.org/) [![NumPy](https://img.shields.io/badge/Library-NumPy-lightblue?logo=numpy)](https://numpy.org/) [![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn-green?logo=scikitlearn)](https://scikit-learn.org/) [![Matplotlib](https://img.shields.io/badge/Visualization-Matplotlib-red?logo=plotly)](https://matplotlib.org/) [![Seaborn](https://img.shields.io/badge/Visualization-Seaborn-teal)](https://seaborn.pydata.org/) [![Contributions](https://img.shields.io/badge/Contributions-Welcome-orange)](docs/Contributing.md) [![GitHub issues](https://img.shields.io/github/issues/shubhmrj/Data-Science)](https://github.com/shubhmrj/Data-Science/issues) [![GitHub forks](https://img.shields.io/github/forks/shubhmrj/Data-Science)](https://github.com/shubhmrj/Data-Science/network) [![GitHub stars](https://img.shields.io/github/stars/shubhmrj/Data-Science)](https://github.com/shubhmrj/Data-Science/stargazers) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-Welcome to the **Comprehensive Data Science & ML Learning Repository** 🚀 — a deep dive into hands-on experiments, mathematical foundations, advanced algorithms, and real-world projects.
-
-This is a **complete learning ecosystem** where theory meets practice, covering everything from statistics fundamentals to production-ready ML systems.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://www.python.org/) 
+[![Jupyter](https://img.shields.io/badge/Notebook-Jupyter-orange?logo=jupyter)](https://jupyter.org/) 
+[![Pandas](https://img.shields.io/badge/Library-Pandas-yellow?logo=pandas)](https://pandas.pydata.org/) 
+[![NumPy](https://img.shields.io/badge/Library-NumPy-lightblue?logo=numpy)](https://numpy.org/) 
+[![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn-green?logo=scikitlearn)](https://scikit-learn.org/) 
+[![Matplotlib](https://img.shields.io/badge/Visualization-Matplotlib-red?logo=plotly)](https://matplotlib.org/) 
+[![Seaborn](https://img.shields.io/badge/Visualization-Seaborn-teal)](https://seaborn.pydata.org/) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 📚 Table of Contents
+## 🎯 Overview
 
-1. [What's Inside](#-whats-inside)
-2. [Mathematical Foundations](#-mathematical-foundations)
-3. [Data Science Practicals](#-data-science-practicals)
-4. [Machine Learning Models](#-machine-learning-models)
-5. [Advanced Topics](#-advanced-topics)
-6. [Learning Path](#-recommended-learning-path)
-7. [Repository Structure](#-repository-structure)
-8. [Getting Started](#-getting-started)
+Welcome to the **Comprehensive Data Science & ML Learning Repository** 🚀 — a deep dive into hands-on experiments, mathematical foundations, advanced algorithms, and real-world projects.
+
+This is a **complete learning ecosystem** where theory meets practice, covering everything from statistics fundamentals to production-ready ML systems. Whether you're a beginner starting your data science journey or an experienced practitioner looking to deepen your expertise, this repository provides structured learning paths and practical implementations.
+
+---
+
+## 📚 Quick Navigation
+
+### Core Content
+- [What's Inside](#-whats-inside)
+- [Mathematical Foundations](#-mathematical-foundations)
+- [Data Science Practicals](#-data-science-practicals)
+- [Machine Learning Models](#-machine-learning-models)
+- [Advanced Topics](#-advanced-topics)
+
+### Getting Started
+- [Recommended Learning Path](#-recommended-learning-path)
+- [Repository Structure](#-repository-structure)
+- [Installation & Setup](#-getting-started)
+- [Key Formulas Reference](#-key-formulas-reference)
+
+### Additional Resources
+- [Online Courses & Books](#-additional-resources)
+- [Communities & Datasets](#communities)
 
 ---
 
@@ -603,94 +622,183 @@ Score = (1/k)Σ scoresᵢ
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
-- Python 3.10+
-- pip or conda
-- Jupyter Notebook or JupyterLab
-- Git
+### ✅ Prerequisites
 
-### 2. Installation
+- **Python 3.10+** - Check with `python --version`
+- **pip** or **conda** - Package managers
+- **Git** - Version control
+- **Jupyter Notebook** or **JupyterLab** - Interactive notebooks
+- **Text Editor/IDE** - VS Code, PyCharm, or similar
 
+### 📥 Installation & Setup
+
+#### Step 1: Clone the Repository
 ```bash
-# Clone repository
 git clone https://github.com/shubhmrj/Data-Science.git
 cd Data-Science
+```
 
-# Create virtual environment
+#### Step 2: Create Virtual Environment
+```bash
+# On Windows
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+venv\Scripts\activate
 
-# Install dependencies
+# On macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Step 3: Install Dependencies
+```bash
+# Core dependencies
 pip install -r requirements.txt
 
 # Launch Jupyter
 jupyter notebook
 ```
 
-### 3. Recommended Packages
+### 📦 Complete Package Installation
 
+**Core Data Science Stack:**
 ```bash
 pip install numpy pandas scikit-learn matplotlib seaborn jupyter
-pip install scipy statsmodels xgboost lightgbm
-pip install tensorflow keras  # For deep learning
-pip install nltk spacy       # For NLP
 ```
 
-### 4. First Steps
-1. Start with **fundamentals/** for math concepts
-2. Move to **01_eda/** for practical data exploration
-3. Follow the learning path above
-4. Implement projects in **05_projects/**
+**Advanced Analytics:**
+```bash
+pip install scipy statsmodels xgboost lightgbm catboost
+```
+
+**Deep Learning (Optional):**
+```bash
+pip install tensorflow keras torch
+```
+
+**NLP & Text Processing (Optional):**
+```bash
+pip install nltk spacy textblob transformers
+```
+
+### 🎯 Suggested Learning Sequence
+
+1. **Start Here**: Review [Mathematical Foundations](#-mathematical-foundations) for core concepts
+2. **Data Fundamentals**: Explore the [Data Science Practicals](#-data-science-practicals) section
+3. **Hands-On Practice**: Work through notebooks in **01_eda/** and **02_preprocessing/**
+4. **Algorithm Learning**: Follow [Machine Learning Models](#-machine-learning-models) section
+5. **Real Projects**: Implement end-to-end projects in **05_projects/**
+6. **Advanced Topics**: Explore [Advanced Topics](#-advanced-topics) when ready
 
 ---
 
 ## 📊 Key Formulas Reference
 
-| Concept | Formula | Use |
-|---------|---------|-----|
-| Mean | μ = (1/n)Σxᵢ | Center of data |
-| Variance | σ² = (1/n)Σ(xᵢ - μ)² | Data spread |
-| Covariance | Cov(X,Y) = E[(X-μₓ)(Y-μᵧ)] | Joint variability |
-| Correlation | ρ = Cov(X,Y)/(σₓσᵧ) | Standardized association |
-| Z-score | z = (x - μ)/σ | Standardization |
-| Entropy | H(X) = -Σp(x)log(p(x)) | Information content |
-| Gini | G = 1 - Σp(x)² | Impurity measure |
+Quick reference guide for essential mathematical formulas used throughout machine learning:
+
+| Concept | Formula | Purpose | Use Case |
+|---------|---------|---------|----------|
+| **Mean** | μ = (1/n)Σxᵢ | Data center | Baseline statistic |
+| **Variance** | σ² = (1/n)Σ(xᵢ - μ)² | Data spread | Dispersion measure |
+| **Std. Deviation** | σ = √σ² | Data spread (interpretable) | Same units as data |
+| **Covariance** | Cov(X,Y) = E[(X-μₓ)(Y-μᵧ)] | Joint variability | Relationship strength |
+| **Correlation** | ρ = Cov(X,Y)/(σₓσᵧ) | Normalized relationship | ρ ∈ [-1, 1] |
+| **Z-score** | z = (x - μ)/σ | Standardization | Outlier detection |
+| **Entropy** | H(X) = -Σp(x)log(p(x)) | Information content | Feature purity |
+| **Gini Impurity** | G = 1 - Σp(x)² | Data impurity | Tree splitting criterion |
 
 ---
 
-## 🌟 Let's Connect
+---
 
-If you find this resource valuable, please ⭐ star the repository!
-Feedback, suggestions, and collaborations are always welcome.
+## 🌟 Support & Connect
 
-📧 **Email**: [shubham4312raj@gmail.com]
-💼 **LinkedIn**: [linkedin.com/in/shubmraj]
-🐙 **GitHub**: [github.com/shubhmrj]
+If you find this resource valuable, please give it a ⭐ **star**! Your support helps others discover this repository.
+
+### Get in Touch
+- 📧 **Email**: shubham4312raj@gmail.com
+- 💼 **LinkedIn**: [linkedin.com/in/shubmraj](https://linkedin.com/in/shubmraj)
+- 👻 **GitHub**: [github.com/shubhmrj](https://github.com/shubhmrj)
+
+### Contributions Welcome 🤝
+Feedback, suggestions, bug reports, and contributions are always welcome! Please feel free to open issues or pull requests to improve this repository.
+
+---
 
 ---
 
 ## 📚 Additional Resources
 
-### Online Courses
-- [Andrew Ng's Machine Learning Course](https://www.coursera.org/learn/machine-learning)
-- [FastAI - Practical Deep Learning](https://course.fast.ai/)
-- [Stanford CS229 - Machine Learning](http://cs229.stanford.edu/)
+### 🎓 Online Courses & Certifications
 
-### Books
-- "Hands-On Machine Learning" by Aurélien Géron
-- "The Hundred-Page Machine Learning Book"
-- "Pattern Recognition & Machine Learning" by Bishop
-- "Deep Learning" by Goodfellow, Bengio, Courville
+**Beginner to Intermediate:**
+- [Andrew Ng's Machine Learning Course](https://www.coursera.org/learn/machine-learning) - Foundational ML concepts
+- [Fast.ai - Practical Deep Learning](https://course.fast.ai/) - Top-down deep learning approach
+- [Kaggle Learn](https://kaggle.com/learn) - Short, practical micro-courses
 
-### Datasets
-- [Kaggle Datasets](https://www.kaggle.com/datasets)
-- [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml)
-- [Google Dataset Search](https://datasetsearch.research.google.com/)
+**Advanced:**
+- [Stanford CS229 - Machine Learning](http://cs229.stanford.edu/) - Theory and mathematics
+- [Stanford CS231N - CNN for Visual Recognition](http://cs231n.stanford.edu/) - Deep learning for vision
+- [Stanford CS224N - NLP with Deep Learning](http://web.stanford.edu/class/cs224n/) - Advanced NLP
 
-### Communities
-- [r/MachineLearning](https://www.reddit.com/r/MachineLearning/)
-- [Kaggle](https://www.kaggle.com/)
-- [Papers With Code](https://paperswithcode.com/)
+### 📖 Recommended Books
+
+| Title | Author | Focus | Level |
+|-------|--------|-------|-------|
+| Hands-On Machine Learning | Aurélien Géron | Practical implementation | Beginner |
+| The Hundred-Page ML Book | Andriy Burkov | Quick reference | Intermediate |
+| Pattern Recognition & ML | Christopher Bishop | Mathematical theory | Advanced |
+| Deep Learning | Goodfellow, Bengio, Courville | Deep neural networks | Advanced |
+| Statistically Rethinking | Richard McElreath | Bayesian methods | Intermediate |
+
+### 📈 Public Datasets
+
+**Curated Collections:**
+- [Kaggle Datasets](https://www.kaggle.com/datasets) - Thousands of datasets with competitions
+- [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml) - Classic ML datasets
+- [Google Dataset Search](https://datasetsearch.research.google.com/) - Search across repositories
+- [AWS Open Data Registry](https://registry.opendata.aws/) - Large-scale datasets
+
+**Domain-Specific:**
+- [ImageNet](https://www.image-net.org/) - Computer vision
+- [Reddit/Pushshift](https://pushshift.io/) - Social media data
+- [Quandl](https://www.quandl.com/) - Financial & economic data
+
+### 🤝 Communities
+
+**Online Communities:**
+- [r/MachineLearning](https://www.reddit.com/r/MachineLearning/) - Reddit ML community
+- [r/datascience](https://www.reddit.com/r/datascience/) - Data science discussions
+- [Kaggle](https://www.kaggle.com/) - Competitions and community
+- [Papers With Code](https://paperswithcode.com/) - ML papers with implementations
+
+**Q&A Platforms:**
+- [Stack Overflow - machine-learning tag](https://stackoverflow.com/questions/tagged/machine-learning)
+- [Data Science Stack Exchange](https://datascience.stackexchange.com/)
+- [Cross Validated](https://stats.stackexchange.com/) - Statistics Q&A
+
+### 🔧 Useful Tools & Libraries
+
+**Data Manipulation:**
+- [Pandas](https://pandas.pydata.org/) - Data frames and analysis
+- [NumPy](https://numpy.org/) - Numerical computing
+- [Polars](https://www.pola-rs.com/) - Fast data manipulation (Rust-based)
+
+**Visualization:**
+- [Matplotlib](https://matplotlib.org/) - Static plots
+- [Seaborn](https://seaborn.pydata.org/) - Statistical graphics
+- [Plotly](https://plotly.com/) - Interactive visualizations
+- [Altair](https://altair-viz.github.io/) - Declarative visualization
+
+**Machine Learning:**
+- [Scikit-Learn](https://scikit-learn.org/) - Classical ML algorithms
+- [XGBoost](https://xgboost.readthedocs.io/) - Gradient boosting
+- [LightGBM](https://lightgbm.readthedocs.io/) - Fast gradient boosting
+- [CatBoost](https://catboost.ai/) - Categorical features support
+
+**Deep Learning:**
+- [TensorFlow/Keras](https://www.tensorflow.org/) - Production-ready framework
+- [PyTorch](https://pytorch.org/) - Research-friendly framework
+- [JAX](https://github.com/google/jax) - Numerical computing with autodiff
 
 ---
 
