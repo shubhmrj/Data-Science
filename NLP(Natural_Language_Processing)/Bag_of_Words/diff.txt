@@ -5,3 +5,14 @@
 | Vector Size    | Vocabulary size         | Vocabulary size |
 | Word Order     | Ignored                 | Ignored         |
 | Frequency      | Not included            | Included        |
+
+
+
+
+
+
+
+
+
+
+

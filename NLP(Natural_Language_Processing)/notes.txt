@@ -1,0 +1,285 @@
+Here are **clear notebook-style notes on Word2Vec** in **Natural Language Processing**.
+
+---
+
+# Word2Vec in NLP
+
+## Definition
+
+**Word2Vec** is a technique used to convert **words into dense numerical vectors (word embeddings)** such that words with **similar meanings have similar vector representations**.
+
+It was developed by researchers at **Google** in **2013**.
+
+Unlike **one-hot encoding** and **Bag of Words**, Word2Vec captures **semantic relationships between words**.
+
+Example:
+
+```
+King – Man + Woman ≈ Queen
+```
+
+This shows the model understands **relationships between words**.
+
+---
+
+# Why Word2Vec is Needed
+
+Problems with traditional methods:
+
+### One-Hot Encoding
+
+* Very **large sparse vectors**
+* No **semantic meaning**
+
+Example:
+
+```
+King → [0,1,0,0]
+Queen → [0,0,1,0]
+```
+
+These vectors show **no relationship**.
+
+---
+
+### Bag of Words
+
+* Ignores **context**
+* Ignores **word order**
+* Produces **sparse vectors**
+
+---
+
+### Word2Vec Solution
+
+Word2Vec generates **dense vectors** where:
+
+* Similar words have **similar vectors**
+* Captures **contextual meaning**
+
+Example:
+
+```
+King → [0.25, 0.71, -0.12, 0.54]
+Queen → [0.27, 0.69, -0.10, 0.52]
+```
+
+Vectors are **close to each other**.
+
+---
+
+# Word Embedding
+
+Word2Vec produces **word embeddings**.
+
+## Word Embedding Definition
+
+A **word embedding** is a **dense vector representation of words** that captures their **semantic meaning**.
+
+Example:
+
+```
+Paris → [0.21, 0.44, -0.31, 0.55]
+France → [0.20, 0.47, -0.28, 0.57]
+```
+
+These vectors reflect **semantic similarity**.
+
+---
+
+# Architecture of Word2Vec
+
+Word2Vec mainly uses **two neural network models**:
+
+1. **CBOW (Continuous Bag of Words)**
+2. **Skip-Gram**
+
+---
+
+# 1. CBOW (Continuous Bag of Words)
+
+## Definition
+
+CBOW predicts the **target word using surrounding context words**.
+
+### Example
+
+Sentence:
+
+```
+I love learning NLP
+```
+
+Context words:
+
+```
+I, love, NLP
+```
+
+Target word:
+
+```
+learning
+```
+
+Model learns:
+
+```
+Context → Target
+```
+
+---
+
+### Diagram Concept
+
+```
+Context Words → Neural Network → Target Word
+```
+
+---
+
+### Advantages
+
+✔ Faster training
+✔ Works well with **large datasets**
+
+---
+
+# 2. Skip-Gram
+
+## Definition
+
+Skip-Gram predicts **context words using the target word**.
+
+### Example
+
+Sentence:
+
+```
+I love learning NLP
+```
+
+Target word:
+
+```
+learning
+```
+
+Context words predicted:
+
+```
+I, love, NLP
+```
+
+Model learns:
+
+```
+Target → Context
+```
+
+---
+
+### Diagram Concept
+
+```
+Target Word → Neural Network → Context Words
+```
+
+---
+
+### Advantages
+
+✔ Works better with **small datasets**
+✔ Good at learning **rare words**
+
+---
+
+# CBOW vs Skip-Gram
+
+| Feature     | CBOW                      | Skip-Gram             |
+| ----------- | ------------------------- | --------------------- |
+| Prediction  | Context → Target          | Target → Context      |
+| Speed       | Faster                    | Slower                |
+| Performance | Better for large datasets | Better for rare words |
+
+---
+
+# Training Process (Simplified)
+
+Steps:
+
+1. Build vocabulary
+2. Convert words into vectors
+3. Train neural network
+4. Adjust weights using context
+5. Final hidden layer weights become **word embeddings**
+
+---
+
+# Example of Word Relationships
+
+Word2Vec can capture relationships:
+
+```
+King – Man + Woman ≈ Queen
+```
+
+```
+Paris – France + Italy ≈ Rome
+```
+
+This shows **semantic understanding**.
+
+---
+
+# Advantages of Word2Vec
+
+✔ Captures **semantic relationships**
+✔ Produces **dense vectors**
+✔ Lower dimensional representation
+✔ Improves **machine learning performance**
+
+---
+
+# Disadvantages
+
+❌ Requires **large training data**
+❌ Cannot handle **unknown words easily**
+❌ Does not capture **complete sentence meaning**
+
+---
+
+# Applications
+
+Word2Vec is used in many NLP tasks:
+
+* Machine translation
+* Sentiment analysis
+* Chatbots
+* Text classification
+* Recommendation systems
+* Search engines
+
+---
+
+# Summary
+
+* **Word2Vec** converts words into **dense vector embeddings**.
+* Words with similar meaning have **similar vectors**.
+* Two main architectures:
+
+  * **CBOW**
+  * **Skip-Gram**
+
+Word2Vec is an important technique in **Natural Language Processing** for learning **semantic relationships between words**.
+
+---
+
+If you want, I can also give **very important NLP exam notes** on:
+
+* **N-grams**
+* **Stemming vs Lemmatization**
+* **Stop Words**
+* **Word Embeddings vs Word2Vec vs GloVe**
+
+(these are **very common 5–10 mark questions in NLP exams**).
