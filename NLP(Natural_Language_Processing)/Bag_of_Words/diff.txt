@@ -1,0 +1,7 @@
+| Feature        | One-Hot Encoding        | Bag of Words    |
+| -------------- | ----------------------- | --------------- |
+| Representation | Word level              | Document level  |
+| Vector Meaning | Indicates word position | Word frequency  |
+| Vector Size    | Vocabulary size         | Vocabulary size |
+| Word Order     | Ignored                 | Ignored         |
+| Frequency      | Not included            | Included        |
