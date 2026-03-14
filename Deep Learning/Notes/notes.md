@@ -725,11 +725,3 @@ These technologies power modern AI systems such as **GPT**.
 
 ---
 
-If you want, I can also create:
-
-1️⃣ **50–100 Deep Learning interview questions with answers**
-2️⃣ **Complete CNN, RNN, Transformer notes in extreme depth**
-3️⃣ **Deep Learning roadmap (beginner → researcher)**
-4️⃣ **PyTorch / TensorFlow coding interview questions**
-
-Just tell me.
