@@ -4,11 +4,11 @@
             "ssh": "Disabled",
             "previewLimit": 50,
             "server": "localhost",
-            "port": 5432,
+            "port": 5433,
             "driver": "PostgreSQL",
-            "name": "practise",
-            "database": "sqlquery",
-            "username": "shubhmrj"
+            "name": "notebook",
+            "database": "postgres",
+            "username": "postgres"
         }
     ]
 }
