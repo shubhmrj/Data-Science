@@ -1,0 +1,100 @@
+
+<style>
+.dot{width:10px;height:10px;border-radius:50%;background:var(--color-border-secondary);display:inline-block;margin:0 3px;transition:background .3s;}
+.dot.on{background:var(--color-text-info);}
+.phase-tag{display:inline-block;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:500;}
+.fwd{background:var(--color-background-info);color:var(--color-text-info);}
+.bwd{background:var(--color-background-danger);color:var(--color-text-danger);}
+.upd{background:var(--color-background-success);color:var(--color-text-success);}
+.card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:18px 20px;background:var(--color-background-secondary);}
+.eq{font-family:var(--font-mono);font-size:13px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 14px;color:var(--color-text-secondary);margin-top:12px;}
+</style>
+
+<div style="padding:1rem 0">
+  <div style="text-align:center;margin-bottom:18px" id="dot-row">
+    <span class="dot on"></span><span class="dot"></span><span class="dot"></span>
+    <span class="dot"></span><span class="dot"></span>
+  </div>
+
+  <div class="card" id="main-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span style="font-size:13px;color:var(--color-text-secondary)" id="step-num">Stage 1 of 5</span>
+      <span class="phase-tag fwd" id="phase-tag">Forward pass</span>
+    </div>
+    <div style="font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px" id="title-txt">Read the input words</div>
+    <div style="font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:4px" id="desc-txt">
+      The RNN receives words one by one: "I" → "love" → "mango". At each step it reads the word (as a number vector) and the previous memory (hidden state h). These two are combined to produce the new hidden state.
+    </div>
+    <div class="eq" id="eq-txt">hₜ = tanh(Wₓ · xₜ  +  Wₕ · hₜ₋₁  +  b)</div>
+  </div>
+
+  <div id="analogy-box" style="margin-top:12px;padding:12px 16px;border-left:3px solid var(--color-border-info);border-radius:0;background:var(--color-background-info);display:none">
+    <div style="font-size:13px;color:var(--color-text-info)" id="analogy-txt"></div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+    <button onclick="go(-1)" id="prev-btn" style="opacity:.4;pointer-events:none">Prev</button>
+    <button onclick="go(1)" id="next-btn">Next stage</button>
+  </div>
+</div>
+
+<script>
+const stages = [
+  {
+    num:"Stage 1 of 5", phase:"Forward pass", phaseClass:"fwd",
+    title:"Read the input words",
+    desc:"The RNN receives words one by one: \"I\" → \"love\" → \"mango\". At each step it reads the word (as a number vector) and the previous memory (hidden state h). These two are combined to produce the new hidden state.",
+    eq:"hₜ = tanh(Wₓ · xₜ  +  Wₕ · hₜ₋₁  +  b)",
+    analogy:"Like reading a WhatsApp message — each new word you read, you update your understanding of the whole conversation so far."
+  },
+  {
+    num:"Stage 2 of 5", phase:"Forward pass", phaseClass:"fwd",
+    title:"Make a prediction at each step",
+    desc:"At every time step, the current hidden state hₜ is passed through an output layer to produce ŷₜ — the predicted next word. Softmax converts raw scores into probabilities (e.g. 70% chance next word is \"juice\", 20% \"shake\", 10% others).",
+    eq:"ŷₜ = softmax(Wᵧ · hₜ)",
+    analogy:"Like guessing what word comes next in autocomplete. After seeing \"I love mango\", the phone suggests \"juice\" with highest confidence."
+  },
+  {
+    num:"Stage 3 of 5", phase:"Forward pass", phaseClass:"fwd",
+    title:"Calculate the loss (how wrong are we?)",
+    desc:"Compare the prediction ŷₜ with the correct answer yₜ. The loss Lₜ measures how wrong the model was. Cross-entropy loss is commonly used — it gives a big penalty when the correct answer had low probability. Total loss L = L₁ + L₂ + L₃.",
+    eq:"L = Σ  −log( ŷₜ[correct word] )",
+    analogy:"Like a teacher marking your test. If you said 'juice' had 5% chance but it was the right answer — that's a big mistake and a big loss value."
+  },
+  {
+    num:"Stage 4 of 5", phase:"Backward pass (BPTT)", phaseClass:"bwd",
+    title:"Propagate error backwards through time",
+    desc:"Now we ask: which weights (Wₓ, Wₕ, Wᵧ) caused this error? Using the chain rule of calculus, the error signal flows backwards from t=3 → t=2 → t=1. At each step, we compute the gradient — how much did each weight contribute to the loss.",
+    eq:"∂L/∂Wₕ = Σ  (∂Lₜ/∂hₜ) · (∂hₜ/∂Wₕ)",
+    analogy:"Like a relay race coach who walks backwards from the finish line — blaming runner 3, then runner 2, then runner 1 — giving each one personalised feedback on what to improve."
+  },
+  {
+    num:"Stage 5 of 5", phase:"Weight update", phaseClass:"upd",
+    title:"Update the weights using gradient descent",
+    desc:"Finally, all weights are nudged in the direction that reduces the loss. The learning rate η controls how big each update step is. This is repeated thousands of times on different sentences until the model gets accurate predictions.",
+    eq:"W  ←  W  −  η · ∂L/∂W",
+    analogy:"Like a student studying after getting test results. Each wrong answer teaches them something. After enough practice, they start getting things right more often."
+  }
+];
+
+let cur = 0;
+
+function go(dir) {
+  cur = Math.max(0, Math.min(stages.length - 1, cur + dir));
+  const s = stages[cur];
+  document.getElementById('step-num').textContent = s.num;
+  document.getElementById('phase-tag').textContent = s.phase;
+  document.getElementById('phase-tag').className = 'phase-tag ' + s.phaseClass;
+  document.getElementById('title-txt').textContent = s.title;
+  document.getElementById('desc-txt').textContent = s.desc;
+  document.getElementById('eq-txt').textContent = s.eq;
+  document.getElementById('analogy-txt').textContent = 'Real-life analogy: ' + s.analogy;
+  document.getElementById('analogy-box').style.display = 'block';
+  document.querySelectorAll('.dot').forEach((d, i) => d.className = 'dot' + (i === cur ? ' on' : ''));
+  document.getElementById('prev-btn').style.opacity = cur === 0 ? '.4' : '1';
+  document.getElementById('prev-btn').style.pointerEvents = cur === 0 ? 'none' : 'auto';
+  document.getElementById('next-btn').style.opacity = cur === stages.length-1 ? '.4' : '1';
+  document.getElementById('next-btn').style.pointerEvents = cur === stages.length-1 ? 'none' : 'auto';
+}
+go(0);
+</script>

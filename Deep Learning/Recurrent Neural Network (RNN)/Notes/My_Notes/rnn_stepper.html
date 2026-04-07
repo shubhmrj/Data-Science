@@ -1,0 +1,116 @@
+
+<style>
+.step-dot { width:10px;height:10px;border-radius:50%;background:var(--color-border-secondary);display:inline-block;margin:0 4px;transition:background .3s; }
+.step-dot.active { background:var(--color-text-info); }
+.cell-box { border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px 20px;background:var(--color-background-secondary);transition:border-color .3s; }
+.cell-box.active { border-color:var(--color-border-info); }
+.word-pill { display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:500;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary); }
+.word-pill.current { background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info); }
+.word-pill.done { opacity:0.45; }
+.mem-bar { height:8px;border-radius:4px;background:var(--color-background-info);transition:width .5s; }
+</style>
+
+<div style="padding:1rem 0">
+  <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px" id="dots">
+    <span class="step-dot active"></span>
+    <span class="step-dot"></span>
+    <span class="step-dot"></span>
+    <span class="step-dot"></span>
+  </div>
+
+  <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px" id="words">
+    <span class="word-pill current" id="w0">"I"</span>
+    <span class="word-pill" id="w1">"love"</span>
+    <span class="word-pill" id="w2">"mango"</span>
+  </div>
+
+  <div class="cell-box active" id="cell-area" style="max-width:560px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-size:13px;font-weight:500;color:var(--color-text-secondary)" id="step-label">Step 1 of 3</span>
+      <span style="font-size:13px;padding:3px 10px;border-radius:12px;background:var(--color-background-info);color:var(--color-text-info)" id="step-title">Reading first word</span>
+    </div>
+    <div style="font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px" id="main-text">Reading "I" — no memory yet</div>
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:16px;line-height:1.6" id="desc-text">The RNN starts with empty memory (h₀ = zeros). It reads the word "I" and creates its first hidden state h₁. This stores a tiny bit of context — "a sentence has started, subject is mentioned."</div>
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:12px;color:var(--color-text-secondary)">Memory fullness</span>
+        <span style="font-size:12px;color:var(--color-text-secondary)" id="mem-pct">25%</span>
+      </div>
+      <div style="background:var(--color-border-tertiary);border-radius:4px;height:8px">
+        <div class="mem-bar" id="mem-bar" style="width:25%"></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary);padding:8px 12px;border-radius:var(--border-radius-md);background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary)" id="formula-text">h₁ = tanh(W·"I" + U·h₀ + b)</div>
+  </div>
+
+  <div id="final-box" style="display:none;max-width:560px;margin:16px auto 0;padding:14px 20px;border-radius:var(--border-radius-lg);background:var(--color-background-success);border:0.5px solid var(--color-border-success)">
+    <div style="font-size:14px;font-weight:500;color:var(--color-text-success);margin-bottom:4px">Prediction ready!</div>
+    <div style="font-size:13px;color:var(--color-text-success)">After reading all 3 words, h₃ contains full context. The model predicts the next word is likely "juice" or "shake".</div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+    <button onclick="prevStep()" id="prev-btn" style="opacity:0.4;pointer-events:none">Prev</button>
+    <button onclick="nextStep()" id="next-btn">Next step</button>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {
+    label:"Step 1 of 3", title:"Reading first word",
+    main:'Reading "I" — no memory yet',
+    desc:'The RNN starts with empty memory (h₀ = zeros). It reads the word "I" and creates its first hidden state h₁. This stores a tiny bit of context — "a sentence has started, subject is mentioned."',
+    mem:25, memLabel:"25%",
+    formula:"h₁ = tanh(W·\"I\" + U·h₀ + b)",
+    current:0
+  },
+  {
+    label:"Step 2 of 3", title:"Building context",
+    main:'Reading "love" — carries h₁ forward',
+    desc:'Now the RNN reads "love" AND uses the previous memory h₁ (which knows "I" was there). It creates h₂ — a richer memory that now holds "someone expressing positive emotion".',
+    mem:60, memLabel:"60%",
+    formula:"h₂ = tanh(W·\"love\" + U·h₁ + b)",
+    current:1
+  },
+  {
+    label:"Step 3 of 3", title:"Full context captured",
+    main:'Reading "mango" — memory peaks',
+    desc:'The RNN reads "mango" along with h₂ (which holds "I love"). Now h₃ has full context: "I love mango". The output layer uses h₃ to predict what comes next — probably "juice" or "shake".',
+    mem:95, memLabel:"95%",
+    formula:"h₃ = tanh(W·\"mango\" + U·h₂ + b) → predict next word",
+    current:2
+  }
+];
+
+let cur = 0;
+
+function render(i) {
+  const s = steps[i];
+  document.getElementById('step-label').textContent = s.label;
+  document.getElementById('step-title').textContent = s.title;
+  document.getElementById('main-text').textContent = s.main;
+  document.getElementById('desc-text').textContent = s.desc;
+  document.getElementById('mem-bar').style.width = s.mem+'%';
+  document.getElementById('mem-pct').textContent = s.memLabel;
+  document.getElementById('formula-text').textContent = s.formula;
+
+  ['w0','w1','w2'].forEach((id,j) => {
+    const el = document.getElementById(id);
+    el.className = 'word-pill' + (j === s.current ? ' current' : j < s.current ? ' done' : '');
+  });
+
+  document.querySelectorAll('.step-dot').forEach((d,j) => {
+    d.className = 'step-dot' + (j === i ? ' active' : j === 3 ? '' : '');
+  });
+
+  document.getElementById('final-box').style.display = (i === 2) ? 'block' : 'none';
+  document.getElementById('prev-btn').style.opacity = i === 0 ? '0.4' : '1';
+  document.getElementById('prev-btn').style.pointerEvents = i === 0 ? 'none' : 'auto';
+  document.getElementById('next-btn').style.opacity = i === steps.length-1 ? '0.4' : '1';
+  document.getElementById('next-btn').style.pointerEvents = i === steps.length-1 ? 'none' : 'auto';
+}
+
+function nextStep() { if(cur < steps.length-1) { cur++; render(cur); } }
+function prevStep() { if(cur > 0) { cur--; render(cur); } }
+render(0);
+</script>
