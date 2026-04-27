@@ -1,0 +1,32 @@
+# .gitignore
+
+# Model files (too large for GitHub — stored on HF Hub instead)
+models/
+*.pkl
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+venv/
+env/
+.env
+
+# Temp files
+*.tmp
+*.log
+.DS_Store
+
+# .gitignore
+Models/
+models/
+*.pkl
+Visualization_Graph/
+*.png
+*.jpg
+__pycache__/
+*.pyc

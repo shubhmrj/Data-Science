@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BankShield — APK Threat Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:         #080c10;
+      --surface:    #0d1117;
+      --surface2:   #161b22;
+      --surface3:   #1c2330;
+      --border:     #21262d;
+      --green:      #00ff88;
+      --green-dim:  #00ff8820;
+      --green-glow: #00ff8844;
+      --red:        #ff3b5c;
+      --red-dim:    #ff3b5c18;
+      --amber:      #ffd60a;
+      --orange:     #ff6b35;
+      --blue:       #4cc9f0;
+      --text:       #e6edf3;
+      --muted:      #7d8590;
+      --dim:        #484f58;
+      --mono:       'Share Tech Mono', monospace;
+      --sans:       'Syne', sans-serif;
+      --r:          10px;
+      --r-lg:       18px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* scanline */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg,
+        transparent, transparent 2px,
+        rgba(0,255,136,0.012) 2px, rgba(0,255,136,0.012) 4px);
+      pointer-events: none; z-index: 900;
+    }
+
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Header ─────────────────────────── */
+    header {
+      padding: 44px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 100% at 15% 50%, rgba(0,255,136,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 80% at 85% 30%, rgba(76,201,240,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-row {
+      position: relative; z-index: 1;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, var(--green), #00c9ff);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 28px rgba(0,255,136,0.3);
+    }
+    .logo h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .logo h1 span { color: var(--green); }
+    .logo p {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--muted); letter-spacing: 2.5px;
+      text-transform: uppercase; margin-top: 2px;
+    }
+    .online-badge {
+      font-family: var(--mono); font-size: 11px;
+      padding: 6px 16px;
+      border: 1px solid var(--green-glow);
+      border-radius: 20px;
+      color: var(--green); background: var(--green-dim);
+      letter-spacing: 1px;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.55; } }
+
+    /* ── Stats row ──────────────────────── */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 40px;
+    }
+    @media(max-width:640px){ .stats { grid-template-columns: repeat(2,1fr); } }
+    .stat {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 18px;
+      text-align: center;
+    }
+    .stat-n {
+      font-family: var(--mono); font-size: 26px; font-weight: 700;
+      color: var(--green); margin-bottom: 4px;
+    }
+    .stat-l {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase;
+    }
+
+    /* ── Main card ──────────────────────── */
+    .main-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 36px;
+      margin-bottom: 24px;
+    }
+    .card-tag {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-tag::before {
+      content: ''; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+    }
+    .card-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .card-sub { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+
+    /* ── Drop zone ──────────────────────── */
+    #drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--r-lg);
+      padding: 52px 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      background: var(--surface2);
+    }
+    #drop-zone:hover, #drop-zone.drag-over {
+      border-color: var(--green);
+      background: var(--green-dim);
+    }
+    #drop-zone.drag-over { box-shadow: 0 0 32px rgba(0,255,136,0.12); }
+    #drop-zone.has-file {
+      border-color: var(--green); border-style: solid;
+      background: var(--green-dim);
+    }
+    #file-input { display: none; }
+
+    .drop-icon {
+      font-size: 44px; margin-bottom: 16px;
+      transition: transform 0.2s;
+    }
+    #drop-zone:hover .drop-icon { transform: scale(1.08); }
+
+    .drop-title {
+      font-size: 16px; font-weight: 700;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .drop-sub {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--muted); letter-spacing: 1px;
+    }
+    .drop-sub span {
+      color: var(--green); text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* file selected state */
+    .file-selected {
+      display: none;
+      align-items: center; gap: 16px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .file-icon-wrap {
+      width: 52px; height: 52px;
+      background: var(--green-dim); border: 1px solid var(--green-glow);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .file-info h3 { font-size: 15px; font-weight: 700; word-break: break-all; }
+    .file-info p { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .file-clear {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--red); cursor: pointer;
+      padding: 4px 10px; border: 1px solid rgba(255,59,92,0.3);
+      border-radius: 6px; transition: all 0.2s;
+    }
+    .file-clear:hover { background: var(--red-dim); }
+
+    /* ── Scan button ────────────────────── */
+    #scan-btn {
+      display: block; width: 100%;
+      margin-top: 24px; padding: 16px;
+      font-family: var(--mono); font-size: 13px;
+      font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--green), #00c9ff);
+      color: #080c10; border: none; border-radius: var(--r);
+      cursor: pointer; transition: all 0.25s;
+    }
+    #scan-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,255,136,0.28); }
+    #scan-btn:active { transform: translateY(0); }
+    #scan-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── Progress ───────────────────────── */
+    #progress-section { display: none; margin-top: 28px; }
+    .progress-label {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--muted); letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      display: flex; justify-content: space-between;
+    }
+    .progress-track {
+      height: 6px; background: var(--surface3);
+      border-radius: 3px; overflow: hidden; margin-bottom: 16px;
+    }
+    .progress-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--green), #00c9ff);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+    .progress-steps { display: flex; flex-direction: column; gap: 8px; }
+    .step-row {
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--mono); font-size: 11px; color: var(--dim);
+      transition: color 0.3s;
+    }
+    .step-row.done   { color: var(--green); }
+    .step-row.active { color: var(--text); }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--dim); flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .step-row.done   .step-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .step-row.active .step-dot {
+      background: var(--blue);
+      box-shadow: 0 0 6px var(--blue);
+      animation: blink-dot 0.8s ease-in-out infinite;
+    }
+    @keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Result section ─────────────────── */
+    #result-section { display: none; margin-top: 28px; }
+
+    .verdict-banner {
+      border-radius: var(--r); padding: 22px 24px;
+      display: flex; align-items: center; gap: 18px;
+      margin-bottom: 20px; position: relative; overflow: hidden;
+    }
+    .verdict-banner::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+    }
+    .verdict-banner.bad  { background: var(--red-dim);  border: 1px solid rgba(255,59,92,0.4); }
+    .verdict-banner.good { background: var(--green-dim);border: 1px solid var(--green-glow); }
+    .verdict-banner.bad::before  { background: var(--red); }
+    .verdict-banner.good::before { background: var(--green); }
+
+    .v-icon { font-size: 38px; flex-shrink: 0; }
+    .v-text h2 { font-size: 22px; font-weight: 800; }
+    .verdict-banner.bad  .v-text h2 { color: var(--red); }
+    .verdict-banner.good .v-text h2 { color: var(--green); }
+    .v-text p { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
+
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    @media(max-width:560px){ .result-grid { grid-template-columns: 1fr; } }
+
+    .r-block {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 18px;
+    }
+    .r-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 10px;
+    }
+
+    /* confidence bar */
+    .conf-val {
+      font-family: var(--mono); font-size: 28px; font-weight: 700;
+      color: var(--text); margin-bottom: 10px;
+    }
+    .conf-track { height: 8px; background: var(--surface3); border-radius: 4px; overflow: hidden; }
+    .conf-fill  { height: 100%; width: 0%; border-radius: 4px; transition: width 1s cubic-bezier(.25,1,.5,1); }
+
+    /* risk badge */
+    .risk-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 20px;
+      font-family: var(--mono); font-size: 12px;
+      letter-spacing: 1.5px; font-weight: 700;
+    }
+    .risk-badge::before { content:''; width:7px; height:7px; border-radius:50%; }
+    .risk-CRITICAL{ background:rgba(255,45,85,.15); color:#ff2d55; border:1px solid rgba(255,45,85,.4); }
+    .risk-CRITICAL::before{ background:#ff2d55; box-shadow:0 0 6px #ff2d55; }
+    .risk-HIGH    { background:rgba(255,107,53,.15); color:var(--orange); border:1px solid rgba(255,107,53,.4); }
+    .risk-HIGH::before{ background:var(--orange); box-shadow:0 0 6px var(--orange); }
+    .risk-MEDIUM  { background:rgba(255,214,10,.12); color:var(--amber); border:1px solid rgba(255,214,10,.3); }
+    .risk-MEDIUM::before{ background:var(--amber); box-shadow:0 0 6px var(--amber); }
+    .risk-LOW     { background:var(--green-dim); color:var(--green); border:1px solid var(--green-glow); }
+    .risk-LOW::before{ background:var(--green); box-shadow:0 0 6px var(--green); }
+
+    /* APK metadata */
+    .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    @media(max-width:560px){ .meta-grid { grid-template-columns: 1fr 1fr; } }
+    .meta-item {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 14px;
+    }
+    .meta-key  { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .meta-val  { font-family: var(--mono); font-size: 12px; color: var(--text); word-break: break-all; }
+
+    /* SHAP reasons */
+    .section-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .reason-row {
+      display: grid; grid-template-columns: 1fr auto auto;
+      align-items: center; gap: 12px;
+      padding: 11px 0; border-bottom: 1px solid var(--border);
+      opacity: 0; transform: translateX(10px);
+      transition: all 0.35s;
+    }
+    .reason-row:last-child { border-bottom: none; }
+    .reason-row.vis { opacity:1; transform:translateX(0); }
+    .reason-feat { font-family: var(--mono); font-size: 11px; color: var(--muted); word-break: break-word; }
+    .reason-val {
+      font-family: var(--mono); font-size: 11px;
+      padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+    }
+    .reason-val.on  { background: rgba(0,255,136,0.12); color: var(--green); }
+    .reason-val.off { background: var(--surface3); color: var(--dim); }
+    .reason-impact { font-family: var(--mono); font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .reason-impact.sus  { color: var(--red); }
+    .reason-impact.safe { color: var(--green); }
+
+    /* permissions list */
+    .perm-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .perm-chip {
+      font-family: var(--mono); font-size: 10px;
+      padding: 4px 10px; border-radius: 4px; letter-spacing: 0.5px;
+    }
+    .perm-chip.danger { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,59,92,.3); }
+    .perm-chip.normal { background: var(--surface3); color: var(--muted); border: 1px solid var(--border); }
+
+    /* scan-again btn */
+    #scan-again {
+      display: block; width: 100%; margin-top: 24px;
+      padding: 13px; font-family: var(--mono); font-size: 12px;
+      letter-spacing: 2px; text-transform: uppercase;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); border-radius: var(--r); cursor: pointer;
+      transition: all 0.2s;
+    }
+    #scan-again:hover { border-color: #30363d; color: var(--text); background: var(--surface2); }
+
+    /* ── Footer ─────────────────────────── */
+    footer {
+      margin-top: 64px; padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    footer p, footer span {
+      font-family: var(--mono); font-size: 11px; color: var(--dim);
+    }
+
+    /* ── Toast ──────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 13px 18px;
+      font-family: var(--mono); font-size: 12px; color: var(--muted);
+      transform: translateY(70px); opacity: 0; transition: all 0.3s; z-index: 999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.err  { border-color: rgba(255,59,92,.4); color: var(--red); }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-row">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <div>
+          <h1>Bank<span>Shield</span></h1>
+          <p>APK Threat Scanner · ML-Powered</p>
+        </div>
+      </div>
+      <div class="online-badge">● SYSTEM ONLINE</div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-n">4,465</div><div class="stat-l">Training Samples</div></div>
+    <div class="stat"><div class="stat-n">241</div><div class="stat-l">Feature Dimensions</div></div>
+    <div class="stat"><div class="stat-n">~97%</div><div class="stat-l">Model Accuracy</div></div>
+    <div class="stat"><div class="stat-n">XGB</div><div class="stat-l">Classifier Type</div></div>
+  </div>
+
+  <!-- UPLOAD CARD -->
+  <div class="main-card">
+    <div class="card-tag">APK Scanner</div>
+    <div class="card-title">Upload Banking APK</div>
+    <div class="card-sub">
+      Upload any Android APK file. The system will parse it, extract permission and API-call features,
+      and run it through the trained ML model to determine if it's a legitimate banking app or a fake.
+    </div>
+
+    <!-- Drop zone -->
+    <div id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <input type="file" id="file-input" accept=".apk"/>
+
+      <!-- Default state -->
+      <div id="drop-default">
+        <div class="drop-icon">📦</div>
+        <div class="drop-title">Drop your APK here</div>
+        <div class="drop-sub">or <span onclick="document.getElementById('file-input').click(); event.stopPropagation()">browse files</span> &nbsp;·&nbsp; .apk only · any size</div>
+      </div>
+
+      <!-- File selected state -->
+      <div class="file-selected" id="file-selected">
+        <div class="file-icon-wrap">📱</div>
+        <div class="file-info">
+          <h3 id="file-name">—</h3>
+          <p id="file-size">—</p>
+        </div>
+        <div class="file-clear" onclick="clearFile(event)">✕ Remove</div>
+      </div>
+    </div>
+
+    <!-- Scan button -->
+    <button id="scan-btn" onclick="startScan()" disabled>
+      ⬡ &nbsp; SCAN APK
+    </button>
+
+    <!-- Progress -->
+    <div id="progress-section">
+      <div class="progress-label">
+        <span id="progress-step-label">Uploading...</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-steps" id="progress-steps">
+        <div class="step-row" id="step-upload"><div class="step-dot"></div>Uploading APK to server</div>
+        <div class="step-row" id="step-parse"><div class="step-dot"></div>Parsing APK (androguard)</div>
+        <div class="step-row" id="step-extract"><div class="step-dot"></div>Extracting features (permissions, API calls)</div>
+        <div class="step-row" id="step-predict"><div class="step-dot"></div>Running ML model prediction</div>
+        <div class="step-row" id="step-shap"><div class="step-dot"></div>Computing SHAP explanations</div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result-section">
+
+      <!-- Verdict -->
+      <div class="verdict-banner" id="verdict-banner">
+        <div class="v-icon" id="v-icon">—</div>
+        <div class="v-text">
+          <h2 id="v-title">—</h2>
+          <p  id="v-sub">—</p>
+        </div>
+      </div>
+
+      <!-- Confidence + Risk -->
+      <div class="result-grid">
+        <div class="r-block">
+          <div class="r-label">Malicious Probability</div>
+          <div class="conf-val" id="conf-val">—</div>
+          <div class="conf-track"><div class="conf-fill" id="conf-fill"></div></div>
+        </div>
+        <div class="r-block" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div class="r-label" style="text-align:center;">Risk Level</div>
+          <div id="risk-badge-wrap"></div>
+        </div>
+      </div>
+
+      <!-- APK Metadata -->
+      <div class="section-label" style="margin-bottom:10px;">APK Metadata</div>
+      <div class="meta-grid" id="meta-grid"></div>
+
+      <!-- SHAP Top Reasons -->
+      <div class="section-label">Top Detection Signals (SHAP)</div>
+      <div id="reasons-list"></div>
+
+      <!-- Permissions found -->
+      <div class="section-label" style="margin-top:20px;">Permissions Detected</div>
+      <div class="perm-list" id="perm-list"></div>
+
+      <!-- Scan again -->
+      <button id="scan-again" onclick="resetAll()">↺ &nbsp; SCAN ANOTHER APK</button>
+    </div>
+
+  </div><!-- /main-card -->
+
+  <footer>
+    <p>TUANDROMD · Tezpur University · IEEE 2020</p>
+    <span>XGBoost · SHAP · androguard</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────────────────
+let selectedFile = null;
+
+const DANGER_PERMS = new Set([
+  'READ_SMS','SEND_SMS','RECEIVE_SMS','SYSTEM_ALERT_WINDOW',
+  'BIND_ACCESSIBILITY_SERVICE','READ_CALL_LOG','WRITE_CALL_LOG',
+  'PROCESS_OUTGOING_CALLS','RECORD_AUDIO','READ_CONTACTS',
+  'WRITE_CONTACTS','GET_ACCOUNTS','USE_CREDENTIALS',
+  'BIND_DEVICE_ADMIN','INSTALL_PACKAGES','RECEIVE_BOOT_COMPLETED'
+]);
+
+// ── File input ────────────────────────────────────
+document.getElementById('file-input').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) selectFile(f);
+});
+
+// ── Drag & drop ───────────────────────────────────
+const dz = document.getElementById('drop-zone');
+
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  if (!f.name.toLowerCase().endsWith('.apk')) {
+    showToast('⚠ Please drop a .apk file', true); return;
+  }
+  selectFile(f);
+});
+
+function selectFile(f) {
+  selectedFile = f;
+  document.getElementById('drop-default').style.display  = 'none';
+  document.getElementById('file-selected').style.display = 'flex';
+  document.getElementById('file-name').textContent = f.name;
+  document.getElementById('file-size').textContent = `${(f.size/1024/1024).toFixed(2)} MB`;
+  dz.classList.add('has-file');
+  document.getElementById('scan-btn').disabled = false;
+  // Hide old results
+  document.getElementById('result-section').style.display   = 'none';
+  document.getElementById('progress-section').style.display = 'none';
+}
+
+function clearFile(e) {
+  e.stopPropagation();
+  selectedFile = null;
+  document.getElementById('file-input').value = '';
+  document.getElementById('drop-default').style.display  = 'block';
+  document.getElementById('file-selected').style.display = 'none';
+  dz.classList.remove('has-file');
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('result-section').style.display   = 'none';
+  document.getElementById('progress-section').style.display = 'none';
+}
+
+// ── Scan ──────────────────────────────────────────
+async function startScan() {
+  if (!selectedFile) return;
+
+  // Show progress
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('result-section').style.display   = 'none';
+  document.getElementById('progress-section').style.display = 'block';
+
+  const steps = ['step-upload','step-parse','step-extract','step-predict','step-shap'];
+  const labels = ['Uploading...','Parsing APK...','Extracting features...','Running model...','Computing SHAP...'];
+  const pcts   = [15, 35, 60, 80, 95];
+
+  // Animate steps
+  let stepIndex = 0;
+  function activateStep(i) {
+    if (i > 0) {
+      document.getElementById(steps[i-1]).className = 'step-row done';
+    }
+    if (i < steps.length) {
+      document.getElementById(steps[i]).className = 'step-row active';
+      document.getElementById('progress-step-label').textContent = labels[i];
+      document.getElementById('progress-pct').textContent = pcts[i] + '%';
+      document.getElementById('progress-fill').style.width = pcts[i] + '%';
+    }
+  }
+
+  activateStep(0);
+  // Simulate intermediate steps visually
+  const delays = [0, 600, 1200, 1800, 2200];
+  delays.forEach((d, i) => {
+    if (i > 0) setTimeout(() => activateStep(i), d);
+  });
+
+  // Build FormData
+  const fd = new FormData();
+  fd.append('apk', selectedFile);
+
+  try {
+    const res = await fetch('/scan', { method: 'POST', body: fd });
+    const data = await res.json();
+
+    // Complete all steps
+    steps.forEach(s => document.getElementById(s).className = 'step-row done');
+    document.getElementById('progress-pct').textContent = '100%';
+    document.getElementById('progress-fill').style.width = '100%';
+    document.getElementById('progress-step-label').textContent = 'Complete';
+
+    await new Promise(r => setTimeout(r, 400));
+    document.getElementById('progress-section').style.display = 'none';
+    document.getElementById('scan-btn').disabled = false;
+
+    if (!data.success) {
+      showToast('Error: ' + data.error, true);
+      return;
+    }
+
+    renderResult(data);
+
+  } catch(err) {
+    showToast('Server error — is Flask running?', true);
+    document.getElementById('progress-section').style.display = 'none';
+    document.getElementById('scan-btn').disabled = false;
+  }
+}
+
+// ── Render result ─────────────────────────────────
+function renderResult(d) {
+  document.getElementById('result-section').style.display = 'block';
+
+  const bad = d.verdict === 'MALICIOUS';
+
+  // Verdict banner
+  const banner = document.getElementById('verdict-banner');
+  banner.className = 'verdict-banner ' + (bad ? 'bad' : 'good');
+  document.getElementById('v-icon').textContent  = bad ? '🚨' : '✅';
+  document.getElementById('v-title').textContent = bad ? 'FAKE / MALICIOUS APK' : 'LEGITIMATE APK';
+  document.getElementById('v-sub').textContent   = bad
+    ? 'This APK exhibits characteristics of a fake banking application'
+    : 'This APK appears to be a genuine banking application';
+
+  // Confidence
+  document.getElementById('conf-val').textContent = d.confidence + '%';
+  const fill = document.getElementById('conf-fill');
+  fill.style.background = bad
+    ? `linear-gradient(90deg, ${d.risk_color}, #ff6b9d)`
+    : 'linear-gradient(90deg, #00ff88, #00c9ff)';
+  setTimeout(() => fill.style.width = d.confidence + '%', 100);
+
+  // Risk badge
+  const badgeWrap = document.getElementById('risk-badge-wrap');
+  badgeWrap.innerHTML = `<span class="risk-badge risk-${d.risk_level}">● ${d.risk_level} RISK</span>`;
+
+  // Metadata
+  const meta = d.meta || {};
+  const metaGrid = document.getElementById('meta-grid');
+  const metaItems = [
+    ['App Name',    meta.app_name    || '?'],
+    ['Package',     meta.package_name|| '?'],
+    ['File Size',   (meta.file_size_kb || '?') + ' KB'],
+    ['Permissions', meta.num_permissions || '?'],
+    ['MD5',         (meta.md5 || '?').substring(0,16) + '…'],
+    ['Features Hit', `${d.active_features} / ${d.features_analyzed}`],
+  ];
+  metaGrid.innerHTML = metaItems.map(([k,v]) =>
+    `<div class="meta-item"><div class="meta-key">${k}</div><div class="meta-val">${v}</div></div>`
+  ).join('');
+
+  // SHAP reasons
+  const reasonsList = document.getElementById('reasons-list');
+  reasonsList.innerHTML = '';
+  if (d.top_reasons && d.top_reasons.length) {
+    d.top_reasons.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'reason-row';
+      row.innerHTML = `
+        <span class="reason-feat">${r.feature}</span>
+        <span class="reason-val ${r.value ? 'on':'off'}">${r.value ? 'ON':'OFF'}</span>
+        <span class="reason-impact ${r.direction==='suspicious'?'sus':'safe'}">
+          ${r.direction==='suspicious'?'▲':'▼'} ${Math.abs(r.impact).toFixed(3)}
+        </span>`;
+      reasonsList.appendChild(row);
+      setTimeout(() => row.classList.add('vis'), 80 + i * 80);
+    });
+  } else {
+    reasonsList.innerHTML = `<div style="font-family:var(--mono);font-size:11px;color:var(--dim);padding:14px 0;text-align:center;">SHAP unavailable for this model type</div>`;
+  }
+
+  // Permissions
+  const permList = document.getElementById('perm-list');
+  permList.innerHTML = '';
+  const perms = meta.permissions || [];
+  perms.forEach(p => {
+    const short = p.split('.').pop().toUpperCase();
+    const chip = document.createElement('span');
+    chip.className = 'perm-chip ' + (DANGER_PERMS.has(short) ? 'danger' : 'normal');
+    chip.textContent = short;
+    permList.appendChild(chip);
+  });
+  if (!perms.length) {
+    permList.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--dim);">No permissions detected</span>`;
+  }
+
+  // Scroll to result
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Reset ─────────────────────────────────────────
+function resetAll() {
+  clearFile({stopPropagation:()=>{}});
+  document.getElementById('result-section').style.display = 'none';
+  // reset progress steps
+  ['step-upload','step-parse','step-extract','step-predict','step-shap'].forEach(s =>
+    document.getElementById(s).className = 'step-row');
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── Toast ─────────────────────────────────────────
+function showToast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr ? ' err' : '') + ' show';
+  setTimeout(() => t.className = 'toast' + (isErr?' err':''), 3500);
+}
+</script>
+</body>
+</html>
