@@ -4,13 +4,19 @@ import tensorflow as tf
 from tensorflow.keras.datasets import imdb
 from tensorflow.keras.preprocessing import sequence
 from tensorflow.keras.models import load_model
+import os
 
 # Load the IMDB dataset word index
 word_index = imdb.get_word_index()
 reverse_word_index = {value: key for key, value in word_index.items()}
 
 # Load the pre-trained model with ReLU activation
-model = load_model('simple_rnn_imdb.h5')
+# model = load_model('simple_rnn_imdb.h5')
+
+base_dir = os.path.dirname(__file__)
+model_path = os.path.join(base_dir, "../Models/simple_rnn.keras")
+
+model = load_model(model_path)
 
 # Step 2: Helper Functions
 # Function to decode reviews
