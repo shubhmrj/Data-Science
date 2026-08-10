@@ -1,8 +1,327 @@
-tensorflow==2.15.0
-pandas 
-numpy 
-scikit-learn
-tensorboard
-matplotlib
-streamlit
-scikeras
+Act as a professional Computer Science professor, cloud architect, and technical textbook author.
+
+Create COMPLETE, EXAM-ORIENTED, HIGH-QUALITY NOTES for the subject:
+
+“CS802 (B) – Cloud Computing”
+Branch: Computer Science and Engineering
+Semester: VIII Semester
+Departmental Elective
+
+======================================================================
+IMPORTANT REQUIREMENTS
+======================================================================
+
+1. Design the notes in CLEAN WHITE BACKGROUND style suitable for:
+   - Printing
+   - PDF export
+   - University exams
+   - Viva preparation
+   - Assignments
+   - Long-term revision
+
+2. Use PROFESSIONAL FORMATTING:
+   - Large unit headings
+   - Topic hierarchy
+   - Clean spacing
+   - Important definition boxes
+   - Tables
+   - Bullet points
+   - Flowcharts
+   - Architecture diagrams
+   - Layer diagrams
+   - Network diagrams
+   - Comparison tables
+   - Case studies
+   - Memory tricks
+   - Exam tips
+
+3. EXPLAIN EVERY TOPIC IN:
+   - Simple language
+   - Deep technical detail
+   - Step-by-step format
+   - Beginner-friendly style
+   - University-level explanation
+
+4. FOR EVERY TOPIC INCLUDE:
+   - Definition
+   - Core concept
+   - Working principle
+   - Internal architecture
+   - Components
+   - Communication flow
+   - Advantages
+   - Disadvantages
+   - Applications
+   - Real-world examples
+   - Exam point of view
+   - Frequently asked questions
+   - Quick revision notes
+
+5. ALL DIAGRAMS MUST BE:
+   - Properly labeled
+   - Black-and-white printable
+   - Easy to reproduce in exams
+   - Architecture-focused
+   - Flow-oriented
+   - ASCII diagrams if needed
+
+6. Whenever discussing:
+   - Cloud architecture
+   - Virtualization
+   - Databases
+   - Security
+   - Middleware
+   - Distributed systems
+   - MapReduce
+   - Networking
+   - Hypervisors
+
+   Explain:
+   - Layer-by-layer architecture
+   - Internal working
+   - Data flow
+   - Request-response cycle
+   - Scheduling and processing flow
+   - Security workflow
+
+7. Create COMPLETE NOTES that can replace textbook study for exam preparation.
+
+8. Add:
+   - Important keywords
+   - Important diagrams
+   - Mnemonics
+   - Formulae wherever needed
+   - Comparison tables
+   - Previous-year-style questions
+
+9. At the END OF EVERY UNIT include:
+   - Important 2-mark questions
+   - Important 5-mark questions
+   - Important 10-mark questions
+   - Viva questions
+   - Quick revision summary
+
+10. Use BOOK STYLE formatting with proper headings and page-like organization.
+
+======================================================================
+SYLLABUS
+======================================================================
+
+
+=========================================================
+UNIT III
+=========================================================
+
+Topics:
+- Data in the cloud
+- Relational databases in cloud
+- Cloud file systems:
+  - GFS
+  - HDFS
+- Features and comparison of GFS and HDFS
+- BigTable
+- HBase
+- Dynamo
+- MapReduce
+- Parallel computing
+- MapReduce model
+- Parallel efficiency of MapReduce
+- Relational operations
+- Enterprise batch processing
+- Applications of MapReduce
+
+FOR THIS UNIT INCLUDE:
+- Cloud data architecture
+- GFS architecture diagram
+- HDFS architecture diagram
+- NameNode/DataNode working
+- GFS vs HDFS comparison table
+- BigTable architecture
+- HBase architecture
+- Dynamo distributed architecture
+- MapReduce execution flow
+- Mapper-Reducer workflow
+- Parallel computing model
+- Batch processing architecture
+
+ALSO EXPLAIN:
+- Data partitioning
+- Replication
+- Fault tolerance
+- Distributed storage
+- CAP theorem basics
+- Data locality
+- Cluster processing
+- Distributed processing pipeline
+
+INCLUDE:
+- Word count MapReduce example
+- Real-world applications of Hadoop
+- Enterprise big data processing examples
+
+=========================================================
+UNIT IV
+=========================================================
+
+Topics:
+- Cloud security fundamentals
+- Vulnerability assessment tools for cloud
+- Privacy and Security in cloud
+- Cloud computing security architecture
+- General security issues
+- Trusted cloud computing
+- Security challenges
+- Virtualization security management
+- Virtual threats
+- VM Security Recommendations
+- VM-Specific Security techniques
+- Secure execution environments
+- Secure communications in cloud
+
+FOR THIS UNIT INCLUDE:
+- Cloud security layered architecture
+- Threat modeling diagram
+- Vulnerability assessment workflow
+- VM attack surface diagram
+- Virtualization attack diagram
+- Secure cloud communication flow
+- Encryption workflow
+- Authentication architecture
+- Access control architecture
+
+ALSO EXPLAIN:
+- Confidentiality
+- Integrity
+- Availability (CIA Triad)
+- Encryption techniques
+- Authentication mechanisms
+- Authorization
+- Identity management
+- Data leakage
+- Side-channel attacks
+- Malware in VMs
+- Secure VM isolation
+
+INCLUDE:
+- Security best practices
+- Case studies of cloud attacks
+- Real-world cloud security incidents
+
+=========================================================
+UNIT V
+=========================================================
+
+Topics:
+- Issues in cloud computing
+- Implementing real-time applications
+- QoS issues in cloud
+- Dependability
+- Data migration
+- Streaming in cloud
+- Cloud Middleware
+- Mobile Cloud Computing
+- Inter-cloud issues
+- Grid of clouds
+- Sky computing
+- Load balancing
+- Resource optimization
+- Resource dynamic reconfiguration
+- Monitoring in cloud
+- Installing cloud platforms
+- Performance evaluation
+- Features and functions of cloud computing platforms
+
+FOR THIS UNIT INCLUDE:
+- Cloud middleware architecture
+- Real-time cloud application flow
+- QoS architecture diagram
+- Data migration pipeline
+- Cloud streaming architecture
+- Mobile cloud computing architecture
+- Inter-cloud communication model
+- Sky computing architecture
+- Load balancing algorithms diagram
+- Resource optimization workflow
+- Dynamic resource allocation model
+- Cloud monitoring architecture
+- Cloud platform deployment architecture
+
+ALSO EXPLAIN:
+- SLA (Service Level Agreement)
+- Fault tolerance
+- Scalability
+- Latency
+- Throughput
+- Dynamic provisioning
+- Cloud orchestration
+- Resource scheduling
+- Auto scaling
+- Monitoring tools
+
+INCLUDE:
+- AWS overview
+- Microsoft Azure overview
+- Google Cloud overview
+- OpenStack basics
+- Kubernetes basics
+- Docker basics
+
+======================================================================
+SPECIAL REQUIREMENTS
+======================================================================
+
+1. Create PROFESSIONAL UNIVERSITY NOTES style formatting.
+
+2. Use:
+   - Tables
+   - Flowcharts
+   - ASCII diagrams
+   - Architecture illustrations
+   - Layer models
+   - Protocol stacks
+   - Security diagrams
+   - Database architecture diagrams
+
+3. Include:
+   - Exam tips
+   - Memory tricks
+   - Important keywords
+   - Definitions box
+   - Quick revision box
+   - Viva preparation notes
+
+4. Every major topic must contain:
+   - “Exam Point of View”
+   - “Important Keywords”
+   - “Quick Revision”
+   - “Important Diagram”
+
+5. Make the notes suitable for:
+   - Beginners
+   - University exams
+   - Viva exams
+   - Technical interviews
+   - Assignment preparation
+
+6. Ensure explanations are:
+   - Technically accurate
+   - Deeply detailed
+   - Highly understandable
+   - Well structured
+   - Easy to memorize
+
+7. Generate UNIT-WISE complete content in BOOK FORMAT.
+
+8. Add large detailed explanations for:
+   - Cloud architecture
+   - Distributed systems
+   - Virtualization
+   - Security
+   - Hadoop ecosystem
+   - Cloud databases
+   - Resource management
+
+9. Avoid short answers.
+Generate COMPREHENSIVE educational content.
+
+10. Make all diagrams printable in black and white and easy to redraw in university exams.
